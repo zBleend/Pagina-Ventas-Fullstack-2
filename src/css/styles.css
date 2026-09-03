@@ -1,1 +1,37 @@
-.
+* {
+  margin: 2;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-primario: #2563eb;
+  --color-primario-oscuro: #1e40af;
+  --color-exito: #16a34a;
+  --color-error: #dc2626;
+  --color-texto: #1f2937;
+  --color-texto-claro: #6b7280;
+  --color-fondo: #f9fafb;
+  --color-borde: #e5e7eb;
+  --color-blanco: #ffffff;
+  --radio-borde: 8px;
+  --sombra: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+body {
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 1rem;
+  line-height: 1.5;
+  color: var(--color-texto);
+  background-color: var(--color-fondo);
+}
+
+header {
+  text-align: center;
+}
+
+.menu-derecha {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+}

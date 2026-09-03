@@ -1,4 +1,4 @@
-# Guía Completa: Creando Tu Primera Tienda Web
+# Guía Completa: Creando un Sistema de Gestión de Productos con Autenticación
 
 **Evaluación Formativa N° 1 - Desarrollo Fullstack II (DSY1104)**
 
@@ -22,23 +22,27 @@
 
 ## 1.1. ¿Qué vamos a construir?
 
-Vamos a crear una **tienda web genérica** con un sistema de registro de productos. Piensa en ello como un **To-Do List pero más completo**: en lugar de solo anotar tareas, vas a poder registrar productos con nombre, precio, categoría, stock y una imagen.
+Vamos a crear un **sistema de gestión de productos con autenticación de usuarios**. La problemática que resolvemos es: ¿cómo restringir el acceso a funcionalidades principales solo a usuarios autenticados, usando únicamente tecnologías frontend?
 
-El sistema tendrá 3 páginas:
+El sistema tendrá 4 páginas:
 
 | Página | Qué hace |
 |---|---|
+| `main.html` | Landing page con opciones de Login y Registro |
 | `login.html` | Iniciar sesión (email + contraseña) |
 | `registro.html` | Crear una cuenta nueva |
-| `index.html` | Ver y registrar productos |
+| `index.html` | Panel de gestión de productos (protegido) |
 
 **Lo que podrás hacer al finalizar:**
-- Crear cuentas de usuario
-- Iniciar sesión
+- Ver una landing page con opciones de acceso
+- Iniciar sesión con usuarios predefinidos
+- Crear cuentas nuevas
+- Acceder al panel de productos solo si estás autenticado
 - Agregar productos con imagen, precio y categoría
 - Ver todos los productos en una cuadrícula
 - Editar productos existentes
 - Eliminar productos
+- Cerrar sesión y ser redirigido a la landing page
 
 ## 1.2. Tecnologías que usaremos
 
@@ -59,17 +63,19 @@ El sistema tendrá 3 páginas:
 Pagina-Ventas/
 ├── src/
 │   ├── pages/
-│   │   ├── index.html        ← Página principal
-│   │   ├── login.html        ← Inicio de sesión
-│   │   └── registro.html     ← Registro de usuario
+│   │   ├── main.html        ← Landing page (entrada)
+│   │   ├── login.html       ← Inicio de sesión
+│   │   ├── registro.html    ← Registro de usuario
+│   │   └── index.html       ← Gestión de productos (protegido)
 │   ├── css/
-│   │   └── styles.css        ← Estilos compartidos
+│   │   └── styles.css       ← Estilos compartidos
 │   ├── js/
-│   │   ├── app.js            ← Lógica de productos
-│   │   └── login.js          ← Validación de formularios
+│   │   ├── auth.js          ← Usuarios predefinidos y lógica de sesión
+│   │   ├── login.js         ← Validación de formularios
+│   │   └── app.js           ← Lógica de productos y verificación de sesión
 │   └── assets/
-│       ├── images/           ← Imágenes
-│       └── video/            ← Videos
+│       ├── images/          ← Imágenes
+│       └── video/           ← Videos
 ├── .gitignore
 ├── README.md
 └── PLAN.md
@@ -208,7 +214,7 @@ HTML5 nos da etiquetas que **describen qué contienen**. En lugar de usar solo `
 <!-- El nav contiene los enlaces para moverse entre páginas -->
 <nav>
   <ul>
-    <li><a href="index.html">INICIO</a></li>
+    <li><a href="main.html">INICIO</a></li>
     <li><a href="login.html">LOGIN</a></li>
     <li><a href="registro.html">REGISTRO</a></li>
   </ul>
@@ -616,17 +622,17 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 
 **Paso 3:** Dentro del body, agrega en este orden:
 1. `<header>` con un `<h1>` que diga "Mi Tienda"
-2. `<nav>` con una lista `<ul>` de 3 enlaces: INICIO, LOGIN, REGISTRO
-3. `<main>` con 2 secciones:
+2. `<main>` con 2 secciones:
    - Sección 1: Formulario de login (email + contraseña + botón)
-   - Sección 2: Video embebido de YouTube
+   - Sección 2: Enlace "¿No tienes cuenta? Regístrate aquí" → registro.html
+3. Enlace de vuelta a main.html
 4. `<footer>` con copyright
 
 **Verifica que:**
 - Todos los `<label>` tienen `for` conectado al `id` del `<input>`
 - Todos los `<input>` tienen `required`
 - Los enlaces apuntan a las páginas correctas
-- El video tiene `loading="lazy"` o `allowfullscreen`
+- El formulario tiene un `id` para conectar con JavaScript
 
 ---
 
@@ -674,7 +680,7 @@ Para que los estilos se apliquen, necesitas "conectar" el CSS con el HTML. Hay 2
 </style>
 ```
 
-**¿Por qué no?** Porque si tienes 3 páginas, tendrías que copiar los estilos 3 veces. Con un archivo externo, lo escribes una vez y sirve para todas.
+**¿Por qué no?** Porque si tienes 4 páginas, tendrías que copiar los estilos 4 veces. Con un archivo externo, lo escribes una vez y sirve para todas.
 
 ## 3.3. Selectores - Cómo encontrar elementos
 
@@ -2132,7 +2138,7 @@ renderizarProductos();
 
 ## 4.11. Almacenamiento en memoria
 
-En nuestro proyecto, los datos se guardan **solo en memoria**. Esto significa que cuando recargas la página, se pierden todo.
+En nuestro proyecto, los datos se guardan **solo en memoria**. Esto significa que cuando recargas la página, se pierde todo.
 
 ```javascript
 // Este array guarda TODOS los productos
@@ -2249,14 +2255,16 @@ Esta sección aplica todo lo que aprendiste en las secciones anteriores. Sigue l
 Pagina-Ventas/
 ├── src/
 │   ├── pages/
-│   │   ├── index.html
+│   │   ├── main.html
 │   │   ├── login.html
-│   │   └── registro.html
+│   │   ├── registro.html
+│   │   └── index.html
 │   ├── css/
 │   │   └── styles.css
 │   ├── js/
-│   │   ├── app.js
-│   │   └── login.js
+│   │   ├── auth.js
+│   │   ├── login.js
+│   │   └── app.js
 │   └── assets/
 │       ├── images/
 │       └── video/
@@ -2273,7 +2281,159 @@ git add -A
 git commit -m "chore: verificar estructura del proyecto"
 ```
 
-## 5.2. Fase 2: login.html
+## 5.2. Fase 2: auth.js - Usuarios y Sesión
+
+### JavaScript - Código completo
+
+Crea el archivo `src/js/auth.js` con el siguiente código:
+
+```javascript
+// ========================================
+// USUARIOS PREDEFINIDOS
+// ========================================
+
+// Array de usuarios que ya existen en el sistema
+let usuarios = [
+  { nombre: "Admin", email: "admin@admin.com", contrasena: "12345678" },
+  { nombre: "Juan", email: "juan@correo.com", contrasena: "12345678" },
+  { nombre: "Maria", email: "maria@correo.com", contrasena: "12345678" }
+];
+
+// ========================================
+// FUNCIONES DE AUTENTICACIÓN
+// ========================================
+
+// Busca un usuario por email en el array
+function buscarUsuario(email) {
+  return usuarios.find(function(usuario) {
+    return usuario.email === email;
+  });
+}
+
+// Valida las credenciales (email + contraseña)
+function validarLogin(email, contrasena) {
+  const usuario = buscarUsuario(email);
+  if (usuario && usuario.contrasena === contrasena) {
+    return true;
+  }
+  return false;
+}
+
+// Registra un usuario nuevo (agrega al array)
+function registrarUsuario(nombre, email, contrasena) {
+  // Verificar que el email no esté registrado
+  const existe = buscarUsuario(email);
+  if (existe) {
+    return false; // Email ya registrado
+  }
+
+  // Agregar el nuevo usuario
+  usuarios.push({
+    nombre: nombre,
+    email: email,
+    contrasena: contrasena
+  });
+  return true; // Registro exitoso
+}
+
+// ========================================
+// FUNCIONES DE SESIÓN
+// ========================================
+
+// Guarda la sesión del usuario en sessionStorage
+function guardarSesion(usuario) {
+  sessionStorage.setItem("usuarioActivo", JSON.stringify({
+    nombre: usuario.nombre,
+    email: usuario.email
+  }));
+}
+
+// Obtiene la sesión activa (retorna null si no hay sesión)
+function obtenerSesion() {
+  const sesion = sessionStorage.getItem("usuarioActivo");
+  if (sesion) {
+    return JSON.parse(sesion);
+  }
+  return null;
+}
+
+// Cierra la sesión (elimina de sessionStorage)
+function cerrarSesion() {
+  sessionStorage.removeItem("usuarioActivo");
+}
+
+// Verifica si hay sesión activa. Si no, redirige a main.html
+function verificarSesion() {
+  const sesion = obtenerSesion();
+  if (!sesion) {
+    window.location.href = "main.html";
+  }
+}
+```
+
+**Commit:**
+```bash
+git add src/js/auth.js
+git commit -m "feat: implementar auth.js con usuarios predefinidos y lógica de sesión"
+```
+
+## 5.3. Fase 3: main.html - Landing Page
+
+### HTML - Código completo
+
+Crea el archivo `src/pages/main.html` con el siguiente código:
+
+```html
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="../css/styles.css">
+  <title>Mi Tienda - Bienvenido</title>
+</head>
+<body>
+  <header>
+    <h1>Mi Tienda</h1>
+  </header>
+  <main>
+    <section>
+      <h2>Bienvenido al Sistema de Gestión de Productos</h2>
+      <article class="acceso-container">
+        <p>Accede al panel de productos para registrar, editar y eliminar productos.</p>
+        <div class="botones-acceso">
+          <a href="login.html" class="btn-acceso">Iniciar Sesión</a>
+          <a href="registro.html" class="btn-acceso btn-registro">Crear Cuenta</a>
+        </div>
+      </article>
+    </section>
+    <section>
+      <h2>Sobre el Sistema</h2>
+      <article>
+        <iframe width="100%" height="400"
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                title="Video de presentación del sistema"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+        </iframe>
+      </article>
+    </section>
+  </main>
+  <footer>
+    <p>&copy; 2026 Mi Tienda - Evaluación Fullstack II</p>
+  </footer>
+</body>
+</html>
+```
+
+**Commit:**
+```bash
+git add src/pages/main.html
+git commit -m "feat: crear landing page main.html con opciones de acceso"
+```
+
+## 5.4. Fase 4: login.html
 
 ### HTML - Código completo
 
@@ -2292,13 +2452,6 @@ Copia esto en `src/pages/login.html`:
   <header>
     <h1>Mi Tienda</h1>
   </header>
-  <nav>
-    <ul>
-      <li><a href="index.html">INICIO</a></li>
-      <li><a href="login.html">LOGIN</a></li>
-      <li><a href="registro.html">REGISTRO</a></li>
-    </ul>
-  </nav>
   <main>
     <section>
       <h2>Iniciar Sesión</h2>
@@ -2318,24 +2471,15 @@ Copia esto en `src/pages/login.html`:
 
           <button type="submit">Iniciar Sesión</button>
         </form>
-      </article>
-    </section>
-    <section>
-      <h2>Sobre Nosotros</h2>
-      <article>
-        <iframe width="100%" height="400"
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                title="Video de presentación de la tienda"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-        </iframe>
+        <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
+        <p><a href="main.html">← Volver a la página principal</a></p>
       </article>
     </section>
   </main>
   <footer>
     <p>&copy; 2026 Mi Tienda - Evaluación Fullstack II</p>
   </footer>
+  <script src="../js/auth.js"></script>
   <script src="../js/login.js"></script>
 </body>
 </html>
@@ -2428,9 +2572,16 @@ document.getElementById("loginForm").addEventListener("submit", function(event) 
     esValido = false;
   }
 
-  // Si todo es válido, muestra mensaje de éxito
+  // Si todo es válido, intenta iniciar sesión con auth.js
   if (esValido) {
-    alert("¡Bienvenido! Login exitoso.");
+    const loginExitoso = validarLogin(email, contrasena);
+    if (loginExitoso) {
+      const usuario = buscarUsuario(email);
+      guardarSesion(usuario);
+      window.location.href = "index.html";
+    } else {
+      mostrarError("email", "Email o contraseña incorrectos");
+    }
   }
 });
 ```
@@ -2441,7 +2592,7 @@ git add src/js/login.js
 git commit -m "feat: implementar validación de login"
 ```
 
-## 5.3. Fase 3: registro.html
+## 5.5. Fase 5: registro.html
 
 ### HTML - Código completo
 
@@ -2460,13 +2611,6 @@ Copia esto en `src/pages/registro.html`:
   <header>
     <h1>Mi Tienda</h1>
   </header>
-  <nav>
-    <ul>
-      <li><a href="index.html">INICIO</a></li>
-      <li><a href="login.html">LOGIN</a></li>
-      <li><a href="registro.html">REGISTRO</a></li>
-    </ul>
-  </nav>
   <main>
     <section>
       <h2>Crear Cuenta</h2>
@@ -2498,12 +2642,15 @@ Copia esto en `src/pages/registro.html`:
 
           <button type="submit">Crear Cuenta</button>
         </form>
+        <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
+        <p><a href="main.html">← Volver a la página principal</a></p>
       </article>
     </section>
   </main>
   <footer>
     <p>&copy; 2026 Mi Tienda - Evaluación Fullstack II</p>
   </footer>
+  <script src="../js/auth.js"></script>
   <script src="../js/login.js"></script>
 </body>
 </html>
@@ -2566,8 +2713,15 @@ if (registroForm) {
       esValido = false;
     }
 
+    // Si todo es válido, intenta registrar con auth.js
     if (esValido) {
-      alert("¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.");
+      const registroExitoso = registrarUsuario(nombre, email, contrasena);
+      if (registroExitoso) {
+        alert("¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.");
+        window.location.href = "login.html";
+      } else {
+        mostrarError("email", "Este email ya está registrado");
+      }
     }
   });
 }
@@ -2579,7 +2733,7 @@ git add src/pages/registro.html src/js/login.js
 git commit -m "feat: crear página de registro con validación"
 ```
 
-## 5.4. Fase 4: index.html
+## 5.6. Fase 6: index.html
 
 ### HTML - Código completo
 
@@ -2597,14 +2751,13 @@ Copia esto en `src/pages/index.html`:
 <body>
   <header>
     <h1>Mi Tienda</h1>
+    <nav>
+      <ul>
+        <li><a href="index.html">PRODUCTOS</a></li>
+        <li><a href="#" id="cerrarSesion">CERRAR SESIÓN</a></li>
+      </ul>
+    </nav>
   </header>
-  <nav>
-    <ul>
-      <li><a href="index.html">INICIO</a></li>
-      <li><a href="login.html">LOGIN</a></li>
-      <li><a href="registro.html">REGISTRO</a></li>
-    </ul>
-  </nav>
   <main>
     <section>
       <h2>Registrar Producto</h2>
@@ -2665,6 +2818,7 @@ Copia esto en `src/pages/index.html`:
   <footer>
     <p>&copy; 2026 Mi Tienda - Evaluación Fullstack II</p>
   </footer>
+  <script src="../js/auth.js"></script>
   <script src="../js/app.js"></script>
 </body>
 </html>
@@ -2675,6 +2829,35 @@ Copia esto en `src/pages/index.html`:
 Copia esto en `src/js/app.js`:
 
 ```javascript
+// ========================================
+// FUNCIONES DE UTILIDAD
+// ========================================
+
+// Muestra un mensaje de error debajo del campo
+function mostrarError(campo, mensaje) {
+  const elementoError = document.getElementById("error-" + campo);
+  if (elementoError) {
+    elementoError.textContent = mensaje;
+    elementoError.style.display = "block";
+  }
+}
+
+// Oculta todos los mensajes de error
+function limpiarErrores() {
+  const errores = document.querySelectorAll(".error-message");
+  errores.forEach(function(error) {
+    error.textContent = "";
+    error.style.display = "none";
+  });
+}
+
+// ========================================
+// VERIFICACIÓN DE SESIÓN
+// ========================================
+
+// Si no hay sesión activa, redirigir a main.html
+verificarSesion();
+
 // ========================================
 // VARIABLES GLOBALES
 // ========================================
@@ -2687,6 +2870,16 @@ let contadorID = 1;
 
 // ID del producto que se está editando (null si no se está editando)
 let editandoId = null;
+
+// ========================================
+// CERRAR SESIÓN
+// ========================================
+
+document.getElementById("cerrarSesion").addEventListener("click", function(event) {
+  event.preventDefault();
+  cerrarSesion();
+  window.location.href = "main.html";
+});
 
 // ========================================
 // FUNCIONES CRUD
@@ -2860,7 +3053,7 @@ git add src/pages/index.html src/js/app.js
 git commit -m "feat: crear página principal con CRUD de productos"
 ```
 
-## 5.5. Fase 5: styles.css
+## 5.7. Fase 7: styles.css
 
 ### CSS - Código completo
 
@@ -3129,6 +3322,46 @@ button[type="submit"]:active {
 }
 
 /* ==================== */
+/* LANDING PAGE         */
+/* ==================== */
+.acceso-container {
+  text-align: center;
+}
+
+.botones-acceso {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  margin-top: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.btn-acceso {
+  display: inline-block;
+  padding: 1rem 2rem;
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  text-decoration: none;
+  border-radius: var(--radio-borde);
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.btn-acceso:hover {
+  background-color: var(--color-primario-oscuro);
+  transform: scale(1.02);
+}
+
+.btn-registro {
+  background-color: var(--color-exito);
+}
+
+.btn-registro:hover {
+  background-color: #15803d;
+}
+
+/* ==================== */
 /* FOOTER               */
 /* ==================== */
 footer {
@@ -3162,6 +3395,10 @@ footer {
     width: 100%;
     max-width: 400px;
   }
+
+  .botones-acceso {
+    flex-direction: column;
+  }
 }
 ```
 
@@ -3171,7 +3408,7 @@ git add src/css/styles.css
 git commit -m "feat: agregar estilos CSS completos"
 ```
 
-## 5.6. Fase 6: Pulido y pruebas
+## 5.8. Fase 8: Pulido y pruebas
 
 **Paso 1:** Probar cada página en el navegador
 
@@ -3181,13 +3418,17 @@ Abre cada archivo HTML en tu navegador (doble clic o "Open with Live Server" en 
 - `src/pages/index.html`
 
 **Paso 2:** Verificar
-- [ ] Login valida correctamente (prueba enviar vacío, email sin @, contraseña corta)
-- [ ] Registro valida correctamente (prueba contraseñas diferentes)
+- [ ] Landing page (main.html) muestra opciones de Login y Registro
+- [ ] Login redirige a index.html con credenciales válidas
+- [ ] Login muestra error con credenciales incorrectas
+- [ ] Registro crea cuenta y redirige a login.html
+- [ ] Registro muestra error si el email ya existe
+- [ ] index.html redirige a main.html si no hay sesión
+- [ ] Cerrar sesión limpia la sesión y redirige a main.html
 - [ ] Productos se agregan y muestran en tarjetas
 - [ ] Productos se editan (clic en "Editar", cambia el formulario)
 - [ ] Productos se eliminan (con confirmación)
-- [ ] Navegación funciona entre las 3 páginas
-- [ ] Video de YouTube se reproduce
+- [ ] Video de YouTube se reproduce en main.html
 - [ ] CSS se aplica correctamente (colores, márgenes, bordes)
 - [ ] Responsive funciona en celular (abre DevTools y simula un celular)
 
