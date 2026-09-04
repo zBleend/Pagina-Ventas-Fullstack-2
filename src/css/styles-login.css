@@ -1,0 +1,328 @@
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-card: #1a2035;
+  --bg-input: #0d1321;
+  --border-subtle: #1e293b;
+  --border-focus: #00d4ff;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-cyan: #00d4ff;
+  --accent-cyan-dim: rgba(0, 212, 255, 0.15);
+  --accent-purple: #a855f7;
+  --accent-purple-dim: rgba(168, 85, 247, 0.12);
+  --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.3), 0 0 60px rgba(0, 212, 255, 0.1);
+  --glow-purple:
+    0 0 20px rgba(168, 85, 247, 0.3), 0 0 60px rgba(168, 85, 247, 0.1);
+  --radius: 6px;
+  --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+  color-scheme: dark;
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+body.login-page {
+  margin: 0;
+  padding: 0;
+  font-family:
+    "Outfit",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--accent-cyan-dim);
+  color: var(--accent-cyan);
+}
+
+header {
+  width: 100%;
+  max-width: 1100px;
+  text-align: right;
+  padding: 24px 32px;
+}
+
+header h1 {
+  font-size: 25px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.login-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 48px;
+  row-gap: 0;
+  width: 100%;
+  max-width: 1100px;
+  align-items: center;
+  justify-items: center;
+  padding: 0 32px;
+  flex: 1;
+}
+
+.imagen-portada {
+  border-radius: 10px;
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-self: center;
+}
+
+.imagen-portada img {
+  border-radius: 10px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border: 2px solid #0ff;
+  opacity: 0.9;
+  transition: opacity var(--transition);
+  box-shadow:
+    0 0 10px #0ff,
+    0 0 20px #0ff,
+    inset 0 0 10px #0ff;
+}
+
+.imagen-portada img:hover {
+  opacity: 1;
+}
+
+.login-section {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  justify-self: center;
+  width: 100%;
+  max-width: 380px;
+  view-transition-name: main-card;
+}
+
+.boton-cuenta-nueva {
+  width: 100%;
+  max-width: 320px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+  text-align: center;
+  font-size: 14px;
+}
+
+.login-section h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+form label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+
+form input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: "Outfit", sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+  outline: none;
+}
+
+form input::placeholder {
+  color: var(--text-muted);
+}
+
+form input:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px var(--accent-cyan-dim);
+}
+
+form button {
+  width: 100%;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
+  color: var(--bg-primary);
+  background: var(--accent-cyan);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
+  margin-top: 4px;
+  letter-spacing: 0.02em;
+}
+
+form button:hover {
+  background: #33dfff;
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-1px);
+}
+
+form button:active {
+  transform: translateY(0);
+}
+
+.boton-cuenta-nueva {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: center;
+  font-size: 14px;
+  align-self: end;
+  justify-self: center;
+  width: 100%;
+  max-width: 380px;
+  padding-bottom: 24px;
+}
+
+.boton-cuenta-nueva p {
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
+.boton-cuenta-nueva a.button {
+  color: var(--accent-purple);
+  text-decoration: none;
+  font-weight: 500;
+  transition:
+    color var(--transition),
+    text-shadow var(--transition);
+}
+
+.boton-cuenta-nueva a.button:hover {
+  color: #c084fc;
+  text-shadow: var(--glow-purple);
+}
+
+.productos-login {
+  display: none;
+}
+
+.error-message {
+  color: #f87171;
+  font-size: 12px;
+  margin-top: -14px;
+  margin-bottom: 8px;
+  min-height: 16px;
+}
+
+footer {
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  padding: 24px 32px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+footer a {
+  color: var(--text-muted);
+  text-decoration: none;
+  margin: 0 12px;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  transition: color var(--transition);
+}
+
+footer a:hover {
+  color: var(--accent-cyan);
+}
+
+footer p {
+  margin-top: 12px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+@media (max-width: 768px) {
+  .login-main {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 0 20px;
+    justify-items: center;
+  }
+
+  .imagen-portada {
+    grid-column: 1;
+    grid-row: auto;
+    order: -1;
+    justify-self: center;
+  }
+
+  .imagen-portada img {
+    max-width: 320px;
+  }
+
+  .login-section {
+    grid-column: 1;
+    grid-row: auto;
+    padding: 28px;
+    max-width: 380px;
+    width: 100%;
+  }
+
+  header {
+    text-align: center;
+    padding: 20px;
+  }
+}

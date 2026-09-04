@@ -3,19 +3,71 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Sistema tienda - Registro</title>
-    <link rel="stylesheet" href="../css/styles.css" />
+    <title>Yorozu 万 / よろず - Registro</title>
+    <link rel="stylesheet" href="../css/styles-registro.css" />
   </head>
   <body class="register-page">
     <header>
-      <h1>Sistema de tienda y registro de productos</h1>
+      <h1>Yorozu 万 / よろず - Registro de productos</h1>
+      <section class="imagen-portada">
+        <img
+          src="../assets/images/portada.png"
+          alt="Portada de la tienda con productos"
+        />
+      </section>
     </header>
 
     <main class="register-main">
       <h2>Registrarse en el Sistema</h2>
       <form id="registerForm">
-        <input type="text" id="name" />
+        <label for="nombre">Nombre</label>
+        <input
+          type="text"
+          name="nombre"
+          id="nombre"
+          placeholder="Nombre de usuario"
+          autocomplete="name"
+          required
+        />
+        <span id="error-nombre" class="error-message"></span>
+
+        <label for="email">Correo Electrónico</label>
+        <input
+          type="email"
+          name="corre"
+          id="correo"
+          placeholder="cristobal@gmail.com"
+          autocomplete="email"
+          required
+        />
+        <span id="error-email" class="error-message"></span>
+
+        <label for="contrasena">Contraseña</label>
+        <input
+          type="password"
+          name="contrasena"
+          id="contrasena"
+          minlength="8"
+          autocomplete="new-password"
+          placeholder="Contraseña"
+          required
+        />
+        <span id="error-contrasena" class="error-message"></span>
+        <label for="confirmar">Confirmar Contraseña</label>
+        <input
+          type="password"
+          name="confirmar"
+          id="confirmar"
+          minlength="8"
+          autocomplete="new-password"
+          placeholder="Confirmar Contraseña"
+          required
+        />
+        <span id="error-confirmar" class="error-message"></span>
+
+        <button type="submit">Crear cuenta</button>
       </form>
+      <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesion</a></p>
     </main>
 
     <footer>
@@ -23,5 +75,7 @@
       <a href="login.html">LINK A LOGIN TEMPORAL</a>
       <p>&copy; Registro de productos - Evaluacion Fullstack II</p>
     </footer>
+    <script src="../js/app.js"></script>
+    <script src="../js/transitions.js"></script>
   </body>
 </html>
