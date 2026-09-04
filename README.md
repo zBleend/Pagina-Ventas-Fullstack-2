@@ -11,12 +11,12 @@ En muchas aplicaciones web, el acceso a funcionalidades principales debe estar r
 ## Flujo de Usuario
 
 ```
-main.html (landing page)
-  ├── [Botón Login]     → login.html → valida credenciales → index.html
-  └── [Botón Registro]  → registro.html → crea cuenta → login.html → index.html
+login.html (página principal)
+  ├── [Formulario Login]      → valida credenciales → index.html
+  └── [Enlace Registro]       → registro.html → crea cuenta → login.html → index.html
 
 index.html (panel de productos - protegido)
-  └── Si no hay sesión activa → redirige a main.html
+  └── Si no hay sesión activa → redirige a login.html
 ```
 
 ## Estructura del Proyecto
@@ -24,8 +24,7 @@ index.html (panel de productos - protegido)
 ```
 src/
 ├── pages/
-│   ├── main.html        ← Landing page (página de entrada)
-│   ├── login.html       ← Formulario de inicio de sesión
+│   ├── login.html       ← Página principal (login + video embebido)
 │   ├── registro.html    ← Formulario de registro de usuario
 │   └── index.html       ← Panel de gestión de productos (protegido)
 ├── css/

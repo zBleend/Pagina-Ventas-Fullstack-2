@@ -24,17 +24,16 @@
 
 Vamos a crear un **sistema de gestión de productos con autenticación de usuarios**. La problemática que resolvemos es: ¿cómo restringir el acceso a funcionalidades principales solo a usuarios autenticados, usando únicamente tecnologías frontend?
 
-El sistema tendrá 4 páginas:
+El sistema tendrá 3 páginas:
 
 | Página | Qué hace |
 |---|---|
-| `main.html` | Landing page con opciones de Login y Registro |
-| `login.html` | Iniciar sesión (email + contraseña) |
+| `login.html` | Página principal con formulario de login + video embebido |
 | `registro.html` | Crear una cuenta nueva |
 | `index.html` | Panel de gestión de productos (protegido) |
 
 **Lo que podrás hacer al finalizar:**
-- Ver una landing page con opciones de acceso
+- Ver la página principal con formulario de login y video embebido
 - Iniciar sesión con usuarios predefinidos
 - Crear cuentas nuevas
 - Acceder al panel de productos solo si estás autenticado
@@ -42,7 +41,7 @@ El sistema tendrá 4 páginas:
 - Ver todos los productos en una cuadrícula
 - Editar productos existentes
 - Eliminar productos
-- Cerrar sesión y ser redirigido a la landing page
+- Cerrar sesión y ser redirigido a la página de login
 
 ## 1.2. Tecnologías que usaremos
 
@@ -63,8 +62,7 @@ El sistema tendrá 4 páginas:
 Pagina-Ventas/
 ├── src/
 │   ├── pages/
-│   │   ├── main.html        ← Landing page (entrada)
-│   │   ├── login.html       ← Inicio de sesión
+│   │   ├── login.html       ← Página principal (login + video embebido)
 │   │   ├── registro.html    ← Registro de usuario
 │   │   └── index.html       ← Gestión de productos (protegido)
 │   ├── css/
@@ -214,7 +212,7 @@ HTML5 nos da etiquetas que **describen qué contienen**. En lugar de usar solo `
 <!-- El nav contiene los enlaces para moverse entre páginas -->
 <nav>
   <ul>
-    <li><a href="main.html">INICIO</a></li>
+    <li><a href="login.html">INICIO</a></li>
     <li><a href="login.html">LOGIN</a></li>
     <li><a href="registro.html">REGISTRO</a></li>
   </ul>
@@ -625,7 +623,7 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 2. `<main>` con 2 secciones:
    - Sección 1: Formulario de login (email + contraseña + botón)
    - Sección 2: Enlace "¿No tienes cuenta? Regístrate aquí" → registro.html
-3. Enlace de vuelta a main.html
+3. Enlace de vuelta a login.html
 4. `<footer>` con copyright
 
 **Verifica que:**
@@ -2255,7 +2253,6 @@ Esta sección aplica todo lo que aprendiste en las secciones anteriores. Sigue l
 Pagina-Ventas/
 ├── src/
 │   ├── pages/
-│   │   ├── main.html
 │   │   ├── login.html
 │   │   ├── registro.html
 │   │   └── index.html
@@ -2362,11 +2359,11 @@ function cerrarSesion() {
   sessionStorage.removeItem("usuarioActivo");
 }
 
-// Verifica si hay sesión activa. Si no, redirige a main.html
+// Verifica si hay sesión activa. Si no, redirige a login.html
 function verificarSesion() {
   const sesion = obtenerSesion();
   if (!sesion) {
-    window.location.href = "main.html";
+    window.location.href = "login.html";
   }
 }
 ```
@@ -2377,11 +2374,11 @@ git add src/js/auth.js
 git commit -m "feat: implementar auth.js con usuarios predefinidos y lógica de sesión"
 ```
 
-## 5.3. Fase 3: main.html - Landing Page
+## 5.3. Fase 3: login.html - Página Principal
 
 ### HTML - Código completo
 
-Crea el archivo `src/pages/main.html` con el siguiente código:
+Crea el archivo `src/pages/login.html` con el siguiente código:
 
 ```html
 <!DOCTYPE html>
@@ -2390,63 +2387,7 @@ Crea el archivo `src/pages/main.html` con el siguiente código:
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="../css/styles.css">
-  <title>Mi Tienda - Bienvenido</title>
-</head>
-<body>
-  <header>
-    <h1>Mi Tienda</h1>
-  </header>
-  <main>
-    <section>
-      <h2>Bienvenido al Sistema de Gestión de Productos</h2>
-      <article class="acceso-container">
-        <p>Accede al panel de productos para registrar, editar y eliminar productos.</p>
-        <div class="botones-acceso">
-          <a href="login.html" class="btn-acceso">Iniciar Sesión</a>
-          <a href="registro.html" class="btn-acceso btn-registro">Crear Cuenta</a>
-        </div>
-      </article>
-    </section>
-    <section>
-      <h2>Sobre el Sistema</h2>
-      <article>
-        <iframe width="100%" height="400"
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                title="Video de presentación del sistema"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-        </iframe>
-      </article>
-    </section>
-  </main>
-  <footer>
-    <p>&copy; 2026 Mi Tienda - Evaluación Fullstack II</p>
-  </footer>
-</body>
-</html>
-```
-
-**Commit:**
-```bash
-git add src/pages/main.html
-git commit -m "feat: crear landing page main.html con opciones de acceso"
-```
-
-## 5.4. Fase 4: login.html
-
-### HTML - Código completo
-
-Copia esto en `src/pages/login.html`:
-
-```html
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../css/styles.css">
-  <title>Iniciar Sesión - Mi Tienda</title>
+  <title>Mi Tienda - Iniciar Sesión</title>
 </head>
 <body>
   <header>
@@ -2472,15 +2413,24 @@ Copia esto en `src/pages/login.html`:
           <button type="submit">Iniciar Sesión</button>
         </form>
         <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
-        <p><a href="main.html">← Volver a la página principal</a></p>
+      </article>
+    </section>
+    <section>
+      <h2>Sobre el Sistema</h2>
+      <article>
+        <iframe width="100%" height="400"
+                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                title="Video de presentación del sistema"
+                frameborder="0"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowfullscreen>
+        </iframe>
       </article>
     </section>
   </main>
   <footer>
     <p>&copy; 2026 Mi Tienda - Evaluación Fullstack II</p>
   </footer>
-  <script src="../js/auth.js"></script>
-  <script src="../js/login.js"></script>
 </body>
 </html>
 ```
@@ -2488,7 +2438,7 @@ Copia esto en `src/pages/login.html`:
 **Commit:**
 ```bash
 git add src/pages/login.html
-git commit -m "feat: crear estructura HTML de login.html"
+git commit -m "feat: crear página principal login.html con formulario y video"
 ```
 
 ### JavaScript - Código completo
@@ -2592,7 +2542,7 @@ git add src/js/login.js
 git commit -m "feat: implementar validación de login"
 ```
 
-## 5.5. Fase 5: registro.html
+## 5.4. Fase 4: registro.html
 
 ### HTML - Código completo
 
@@ -2643,7 +2593,6 @@ Copia esto en `src/pages/registro.html`:
           <button type="submit">Crear Cuenta</button>
         </form>
         <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
-        <p><a href="main.html">← Volver a la página principal</a></p>
       </article>
     </section>
   </main>
@@ -2855,7 +2804,7 @@ function limpiarErrores() {
 // VERIFICACIÓN DE SESIÓN
 // ========================================
 
-// Si no hay sesión activa, redirigir a main.html
+// Si no hay sesión activa, redirigir a login.html
 verificarSesion();
 
 // ========================================
@@ -2878,7 +2827,7 @@ let editandoId = null;
 document.getElementById("cerrarSesion").addEventListener("click", function(event) {
   event.preventDefault();
   cerrarSesion();
-  window.location.href = "main.html";
+  window.location.href = "login.html";
 });
 
 // ========================================
@@ -3418,17 +3367,17 @@ Abre cada archivo HTML en tu navegador (doble clic o "Open with Live Server" en 
 - `src/pages/index.html`
 
 **Paso 2:** Verificar
-- [ ] Landing page (main.html) muestra opciones de Login y Registro
+- [ ] Página principal (login.html) muestra formulario de login y video embebido
 - [ ] Login redirige a index.html con credenciales válidas
 - [ ] Login muestra error con credenciales incorrectas
 - [ ] Registro crea cuenta y redirige a login.html
 - [ ] Registro muestra error si el email ya existe
-- [ ] index.html redirige a main.html si no hay sesión
-- [ ] Cerrar sesión limpia la sesión y redirige a main.html
+- [ ] index.html redirige a login.html si no hay sesión
+- [ ] Cerrar sesión limpia la sesión y redirige a login.html
 - [ ] Productos se agregan y muestran en tarjetas
 - [ ] Productos se editan (clic en "Editar", cambia el formulario)
 - [ ] Productos se eliminan (con confirmación)
-- [ ] Video de YouTube se reproduce en main.html
+- [ ] Video de YouTube se reproduce en login.html
 - [ ] CSS se aplica correctamente (colores, márgenes, bordes)
 - [ ] Responsive funciona en celular (abre DevTools y simula un celular)
 
