@@ -28,17 +28,17 @@ El sistema tendrá 3 páginas:
 
 | Página | Qué hace |
 |---|---|
-| `login.html` | Página principal con formulario de login + video embebido |
+| `login.html` | Página principal con formulario de login, imagen de portada y enlace a registro |
 | `registro.html` | Crear una cuenta nueva |
 | `index.html` | Panel de gestión de productos (protegido) |
 
 **Lo que podrás hacer al finalizar:**
-- Ver la página principal con formulario de login y video embebido
+- Ver la página principal con formulario de login, imagen de portada y enlace a registro
 - Iniciar sesión con usuarios predefinidos
 - Crear cuentas nuevas
 - Acceder al panel de productos solo si estás autenticado
-- Agregar productos con imagen, precio y categoría
-- Ver todos los productos en una cuadrícula
+- Agregar productos con ID, nombre, descripción, precio, categoría, stock e imagen
+- Ver todos los productos en una tabla horizontal
 - Editar productos existentes
 - Eliminar productos
 - Cerrar sesión y ser redirigido a la página de login
@@ -59,24 +59,28 @@ El sistema tendrá 3 páginas:
 ## 1.3. Estructura del proyecto
 
 ```
-Pagina-Ventas/
+Pagina-Ventas-Fullstack-2/
 ├── src/
 │   ├── pages/
-│   │   ├── login.html       ← Página principal (login + video embebido)
-│   │   ├── registro.html    ← Registro de usuario
-│   │   └── index.html       ← Gestión de productos (protegido)
+│   │   ├── login.html          ← Página principal (login + portada)
+│   │   ├── registro.html       ← Registro de usuario
+│   │   └── index.html          ← Gestión de productos (protegido)
 │   ├── css/
-│   │   └── styles.css       ← Estilos compartidos
+│   │   ├── styles-login.css    ← Estilos de la página de login
+│   │   ├── styles-registro.css ← Estilos de la página de registro
+│   │   └── styles.css          ← Estilos del panel de productos (index)
 │   ├── js/
-│   │   ├── auth.js          ← Usuarios predefinidos y lógica de sesión
-│   │   ├── login.js         ← Validación de formularios
-│   │   └── app.js           ← Lógica de productos y verificación de sesión
+│   │   ├── auth.js             ← Usuarios predefinidos y lógica de sesión
+│   │   ├── login.js            ← Validación de formularios (login + registro)
+│   │   ├── app.js              ← Lógica de productos y verificación de sesión
+│   │   └── transitions.js      ← Animaciones entre login y registro
 │   └── assets/
-│       ├── images/          ← Imágenes
-│       └── video/           ← Videos
+│       └── images/
+│           └── portada.png     ← Imagen de portada de la tienda
 ├── .gitignore
 ├── README.md
-└── PLAN.md
+├── PLAN.md
+└── INSTRUCCIONES.md
 ```
 
 ## 1.4. Cómo leer este documento
@@ -619,12 +623,12 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 **Paso 2:** Agrega el esqueleto base (DOCTYPE, html, head, body)
 
 **Paso 3:** Dentro del body, agrega en este orden:
-1. `<header>` con un `<h1>` que diga "Mi Tienda"
-2. `<main>` con 2 secciones:
-   - Sección 1: Formulario de login (email + contraseña + botón)
-   - Sección 2: Enlace "¿No tienes cuenta? Regístrate aquí" → registro.html
-3. Enlace de vuelta a login.html
-4. `<footer>` con copyright
+1. `<header>` con un `<h1>` que diga "Yorozu 万 / よろず"
+2. `<main>` con:
+   - Imagen de portada (`portada.png`)
+   - Sección con el formulario de login (email + contraseña + botón)
+   - Enlace "¿No tiene cuenta? Regístrese ahora mismo" → registro.html
+3. `<footer>` con copyright
 
 **Verifica que:**
 - Todos los `<label>` tienen `for` conectado al `id` del `<input>`
@@ -1214,32 +1218,32 @@ section p { color: red; }
 
 **Objetivo:** Crear los estilos CSS para la página de login.
 
-**Paso 1:** Abre `src/css/styles.css`
+**Paso 1:** Abre `src/css/styles-login.css`
 
-**Paso 2:** Agrega el reset global y las variables (copia el código de la sección 3.9)
+**Paso 2:** Agrega el import de Google Fonts, el reset global y las variables (copia el código de las secciones 3.7 y 3.9)
 
 **Paso 3:** Estiliza en este orden:
 1. Reset y variables (`:root`)
-2. Tipografía base (`body`)
-3. Header y nav
-4. Formulario (inputs, labels, botón)
-5. Mensajes de error
-6. Footer
-7. Responsive (`@media`)
+2. Tipografía base (`body.login-page`)
+3. Header
+4. Grid del main: imagen de portada a la izquierda, tarjeta de login a la derecha
+5. Formulario (inputs, labels, botón)
+6. Mensajes de error
+7. Footer
+8. Responsive (`@media`)
 
 **Resultado esperado:**
-- La página tiene fondo gris claro (`#f9fafb`)
-- El formulario está centrado con máximo 400px de ancho
-- Los inputs tienen bordes redondeados, padding y borde gris
-- Al hacer clic en un input, el borde cambia a azul (focus)
-- El botón es azul, texto blanco, bordes redondeados
-- Al pasar el mouse sobre el botón, el color se oscurece suavemente
-- Los errores se muestran en rojo debajo del campo
-- La navegación está en horizontal con enlaces azules
-- El footer tiene fondo oscuro y texto blanco
+- La página tiene fondo oscuro (`#0a0e17`)
+- Layout en grid de 2 columnas: imagen de portada con borde cyan y tarjeta con el login
+- La tarjeta del formulario tiene fondo `#1a2035` y borde sutil
+- Los inputs tienen fondo oscuro, bordes redondeados y al enfocarse el borde se ilumina cyan
+- El botón es cyan con hover con glow
+- Los errores se muestran en rojo (`#f87171`) debajo del campo
+- El footer tiene borde superior sutil y texto apagado
+- En móvil la imagen pasa arriba del formulario (grid de 1 columna)
 
 **Si no te funciona, verifica:**
-- ¿Conectaste el CSS en el HTML con `<link rel="stylesheet" href="../css/styles.css">`?
+- ¿Conectaste el CSS en el HTML con `<link rel="stylesheet" href="../css/styles-login.css">`?
 - ¿Las rutas son correctas? (`../` sube un nivel de carpeta)
 - ¿El navegador está actualizado? (F5 o Ctrl+R)
 - Abre la consola del navegador (F12) y busca errores en rojo
@@ -2250,21 +2254,24 @@ Esta sección aplica todo lo que aprendiste en las secciones anteriores. Sigue l
 **Paso 1:** Verificar la estructura de carpetas
 
 ```
-Pagina-Ventas/
+Pagina-Ventas-Fullstack-2/
 ├── src/
 │   ├── pages/
 │   │   ├── login.html
 │   │   ├── registro.html
 │   │   └── index.html
 │   ├── css/
+│   │   ├── styles-login.css
+│   │   ├── styles-registro.css
 │   │   └── styles.css
 │   ├── js/
 │   │   ├── auth.js
 │   │   ├── login.js
-│   │   └── app.js
+│   │   ├── app.js
+│   │   └── transitions.js
 │   └── assets/
-│       ├── images/
-│       └── video/
+│       └── images/
+│           └── portada.png
 ├── .gitignore
 ├── README.md
 └── PLAN.md
@@ -2284,30 +2291,49 @@ git commit -m "chore: verificar estructura del proyecto"
 
 Crea el archivo `src/js/auth.js` con el siguiente código:
 
-```javascript
-// ========================================
-// USUARIOS PREDEFINIDOS
-// ========================================
+Los 4 usuarios predefinidos están en `USUARIOS_INICIALES`. Los usuarios que se registran en `registro.html` se **persisten en `localStorage`** (clave `usuariosRegistrados`): al recargar o navegar, la cuenta creada sigue existiendo y puede iniciar sesión. Al cargar, el array `usuarios` combina los predefinidos con los guardados.
 
-// Array de usuarios que ya existen en el sistema
-let usuarios = [
-  { nombre: "Admin", email: "admin@admin.com", contrasena: "12345678" },
+```javascript
+const USUARIOS_INICIALES = [
+  { nombre: "Admin", email: "admin@correo.com", contrasena: "12345678" },
   { nombre: "Juan", email: "juan@correo.com", contrasena: "12345678" },
-  { nombre: "Maria", email: "maria@correo.com", contrasena: "12345678" }
+  { nombre: "Cristobal", email: "cris@correo.com", contrasena: "12345678" },
+  { nombre: "Francisca", email: "fran@correo.com", contrasena: "12345678" },
 ];
 
-// ========================================
-// FUNCIONES DE AUTENTICACIÓN
-// ========================================
+let usuarios = cargarUsuarios();
 
-// Busca un usuario por email en el array
+function cargarUsuarios() {
+  let guardados = [];
+  try {
+    const datos = localStorage.getItem("usuariosRegistrados");
+    if (datos) {
+      guardados = JSON.parse(datos);
+    }
+  } catch {}
+  return USUARIOS_INICIALES.concat(guardados);
+}
+
+function guardarUsuarios() {
+  try {
+    const registrados = usuarios.filter(function (usuario) {
+      return !USUARIOS_INICIALES.some(function (inicial) {
+        return inicial.email === usuario.email;
+      });
+    });
+    localStorage.setItem("usuariosRegistrados", JSON.stringify(registrados));
+  } catch {}
+}
+
+// ponytail: contraseñas en texto plano en localStorage, suficiente para la práctica.
+// Para un sistema real usar hash del lado del servidor.
+
 function buscarUsuario(email) {
-  return usuarios.find(function(usuario) {
+  return usuarios.find(function (usuario) {
     return usuario.email === email;
   });
 }
 
-// Valida las credenciales (email + contraseña)
 function validarLogin(email, contrasena) {
   const usuario = buscarUsuario(email);
   if (usuario && usuario.contrasena === contrasena) {
@@ -2316,36 +2342,30 @@ function validarLogin(email, contrasena) {
   return false;
 }
 
-// Registra un usuario nuevo (agrega al array)
 function registrarUsuario(nombre, email, contrasena) {
-  // Verificar que el email no esté registrado
   const existe = buscarUsuario(email);
   if (existe) {
-    return false; // Email ya registrado
+    return false;
   }
-
-  // Agregar el nuevo usuario
   usuarios.push({
     nombre: nombre,
     email: email,
-    contrasena: contrasena
+    contrasena: contrasena,
   });
-  return true; // Registro exitoso
+  guardarUsuarios();
+  return true;
 }
 
-// ========================================
-// FUNCIONES DE SESIÓN
-// ========================================
-
-// Guarda la sesión del usuario en sessionStorage
 function guardarSesion(usuario) {
-  sessionStorage.setItem("usuarioActivo", JSON.stringify({
-    nombre: usuario.nombre,
-    email: usuario.email
-  }));
+  sessionStorage.setItem(
+    "usuarioActivo",
+    JSON.stringify({
+      nombre: usuario.nombre,
+      email: usuario.email,
+    }),
+  );
 }
 
-// Obtiene la sesión activa (retorna null si no hay sesión)
 function obtenerSesion() {
   const sesion = sessionStorage.getItem("usuarioActivo");
   if (sesion) {
@@ -2354,12 +2374,10 @@ function obtenerSesion() {
   return null;
 }
 
-// Cierra la sesión (elimina de sessionStorage)
 function cerrarSesion() {
   sessionStorage.removeItem("usuarioActivo");
 }
 
-// Verifica si hay sesión activa. Si no, redirige a login.html
 function verificarSesion() {
   const sesion = obtenerSesion();
   if (!sesion) {
@@ -2381,64 +2399,93 @@ git commit -m "feat: implementar auth.js con usuarios predefinidos y lógica de 
 Crea el archivo `src/pages/login.html` con el siguiente código:
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../css/styles.css">
-  <title>Mi Tienda - Iniciar Sesión</title>
-</head>
-<body>
-  <header>
-    <h1>Mi Tienda</h1>
-  </header>
-  <main>
-    <section>
-      <h2>Iniciar Sesión</h2>
-      <article>
-        <form id="loginForm">
-          <label for="email">Correo Electrónico</label>
-          <input type="email" id="email" name="email"
-                 placeholder="ejemplo@correo.com"
-                 autocomplete="email" required>
-          <span id="error-email" class="error-message"></span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yorozu 万 / よろず - Iniciar Sesión</title>
+    <link rel="stylesheet" href="../css/styles-login.css" />
+  </head>
+  <body class="login-page">
+    <header>
+      <h1>Yorozu 万 / よろず - Registro de productos</h1>
+    </header>
+
+    <main class="login-main">
+      <section class="login-section" aria-labelledby="login-title">
+        <h2 id="login-title">Iniciar sesión</h2>
+
+        <form id="loginForm" novalidate>
+          <label for="email">Correo electrónico</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="cristobal@gmail.com"
+            autocomplete="email"
+            aria-describedby="error-email"
+            required
+          />
+          <span
+            id="error-email"
+            class="error-message"
+            aria-live="polite"
+          ></span>
 
           <label for="contrasena">Contraseña</label>
-          <input type="password" id="contrasena" name="contrasena"
-                 minlength="8"
-                 autocomplete="current-password" required>
-          <span id="error-contrasena" class="error-message"></span>
+          <input
+            type="password"
+            id="contrasena"
+            name="contrasena"
+            minlength="8"
+            autocomplete="current-password"
+            placeholder="Contraseña"
+            aria-describedby="error-contrasena"
+            required
+          />
+          <span
+            id="error-contrasena"
+            class="error-message"
+            aria-live="polite"
+          ></span>
 
-          <button type="submit">Iniciar Sesión</button>
+          <button type="submit">Iniciar sesión</button>
         </form>
-        <p>¿No tienes cuenta? <a href="registro.html">Regístrate aquí</a></p>
-      </article>
-    </section>
-    <section>
-      <h2>Sobre el Sistema</h2>
-      <article>
-        <iframe width="100%" height="400"
-                src="https://www.youtube.com/embed/dQw4w9WgXcQ"
-                title="Video de presentación del sistema"
-                frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowfullscreen>
-        </iframe>
-      </article>
-    </section>
-  </main>
-  <footer>
-    <p>&copy; 2026 Mi Tienda - Evaluación Fullstack II</p>
-  </footer>
-</body>
+
+        <section class="boton-cuenta-nueva">
+          <p>¿No tiene cuenta? ¡Regístrese ahora mismo!</p>
+          <a href="registro.html" class="button">Crear cuenta nueva</a>
+        </section>
+      </section>
+
+      <section class="imagen-portada">
+        <img
+          src="../assets/images/portada.png"
+          alt="Portada de la tienda con productos"
+          height="600"
+          width="600"
+        />
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; Registro de productos - Evaluación Fullstack II</p>
+    </footer>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/login.js"></script>
+    <script src="../js/transitions.js"></script>
+  </body>
 </html>
 ```
+
+> **Nota:** `login.html` y `registro.html` NO cargan `app.js`. Ese archivo es exclusivo del panel protegido (`index.html`); cargarlo en login/registro redirigiría a login.html al no existir sesión, rompiendo el registro.
 
 **Commit:**
 ```bash
 git add src/pages/login.html
-git commit -m "feat: crear página principal login.html con formulario y video"
+git commit -m "feat: crear página principal login.html con formulario y portada"
 ```
 
 ### JavaScript - Código completo
@@ -2462,7 +2509,7 @@ function mostrarError(campo, mensaje) {
 // Oculta todos los mensajes de error
 function limpiarErrores() {
   const errores = document.querySelectorAll(".error-message");
-  errores.forEach(function(error) {
+  errores.forEach(function (error) {
     error.textContent = "";
     error.style.display = "none";
   });
@@ -2480,136 +2527,65 @@ function validarCampoVacio(valor, nombreCampo) {
 // Verifica si un email tiene formato válido
 function validarEmail(email) {
   if (!email.includes("@")) {
-    mostrarError("email", "El email debe contener @");
+    mostrarError("email", "El correo debe contener @");
     return false;
   }
   if (!email.includes(".")) {
-    mostrarError("email", "El email debe contener un dominio (ej: .com)");
+    mostrarError("email", "El correo debe contener un dominio (ej: .com)");
     return false;
   }
   return true;
 }
 
 // ========================================
-// EVENT LISTENER DEL FORMULARIO
+// VALIDACIÓN DE LOGIN
 // ========================================
 
-// Espera a que el usuario envíe el formulario
-document.getElementById("loginForm").addEventListener("submit", function(event) {
-  // Previene que la página se recargue
-  event.preventDefault();
+// El listener solo se crea si el formulario de login existe en la página
+const loginForm = document.getElementById("loginForm");
+if (loginForm) {
+  loginForm.addEventListener("submit", function (event) {
+    // Previene que la página se recargue
+    event.preventDefault();
+    limpiarErrores();
 
-  // Limpia errores anteriores
-  limpiarErrores();
+    // Obtiene los valores de los campos
+    const email = document.getElementById("email").value;
+    const contrasena = document.getElementById("contrasena").value;
 
-  // Obtiene los valores de los campos
-  const email = document.getElementById("email").value;
-  const contrasena = document.getElementById("contrasena").value;
+    // Valida cada campo
+    let esValido = true;
 
-  // Valida cada campo
-  let esValido = true;
-
-  if (!validarCampoVacio(email, "email")) {
-    esValido = false;
-  } else if (!validarEmail(email)) {
-    esValido = false;
-  }
-
-  if (!validarCampoVacio(contrasena, "contrasena")) {
-    esValido = false;
-  } else if (contrasena.length < 8) {
-    mostrarError("contrasena", "La contraseña debe tener al menos 8 caracteres");
-    esValido = false;
-  }
-
-  // Si todo es válido, intenta iniciar sesión con auth.js
-  if (esValido) {
-    const loginExitoso = validarLogin(email, contrasena);
-    if (loginExitoso) {
-      const usuario = buscarUsuario(email);
-      guardarSesion(usuario);
-      window.location.href = "index.html";
-    } else {
-      mostrarError("email", "Email o contraseña incorrectos");
+    if (!validarCampoVacio(email, "email")) {
+      esValido = false;
+    } else if (!validarEmail(email)) {
+      esValido = false;
     }
-  }
-});
-```
 
-**Commit:**
-```bash
-git add src/js/login.js
-git commit -m "feat: implementar validación de login"
-```
+    if (!validarCampoVacio(contrasena, "contrasena")) {
+      esValido = false;
+    } else if (contrasena.length < 8) {
+      mostrarError(
+        "contrasena",
+        "La contraseña debe tener al menos 8 caracteres",
+      );
+      esValido = false;
+    }
 
-## 5.4. Fase 4: registro.html
+    // Si todo es válido, intenta iniciar sesión con auth.js
+    if (esValido) {
+      const loginExitoso = validarLogin(email, contrasena);
+      if (loginExitoso) {
+        const usuario = buscarUsuario(email);
+        guardarSesion(usuario);
+        window.location.href = "index.html";
+      } else {
+        mostrarError("email", "Correo o contraseña incorrecto");
+      }
+    }
+  });
+}
 
-### HTML - Código completo
-
-Copia esto en `src/pages/registro.html`:
-
-```html
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../css/styles.css">
-  <title>Registro - Mi Tienda</title>
-</head>
-<body>
-  <header>
-    <h1>Mi Tienda</h1>
-  </header>
-  <main>
-    <section>
-      <h2>Crear Cuenta</h2>
-      <article>
-        <form id="registroForm">
-          <label for="nombre">Nombre</label>
-          <input type="text" id="nombre" name="nombre"
-                 placeholder="Tu nombre"
-                 autocomplete="name" required>
-          <span id="error-nombre" class="error-message"></span>
-
-          <label for="email">Correo Electrónico</label>
-          <input type="email" id="email" name="email"
-                 placeholder="ejemplo@correo.com"
-                 autocomplete="email" required>
-          <span id="error-email" class="error-message"></span>
-
-          <label for="contrasena">Contraseña</label>
-          <input type="password" id="contrasena" name="contrasena"
-                 minlength="8"
-                 autocomplete="new-password" required>
-          <span id="error-contrasena" class="error-message"></span>
-
-          <label for="confirmar">Confirmar Contraseña</label>
-          <input type="password" id="confirmar" name="confirmar"
-                 minlength="8"
-                 autocomplete="new-password" required>
-          <span id="error-confirmar" class="error-message"></span>
-
-          <button type="submit">Crear Cuenta</button>
-        </form>
-        <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesión</a></p>
-      </article>
-    </section>
-  </main>
-  <footer>
-    <p>&copy; 2026 Mi Tienda - Evaluación Fullstack II</p>
-  </footer>
-  <script src="../js/auth.js"></script>
-  <script src="../js/login.js"></script>
-</body>
-</html>
-```
-
-### JavaScript - Agregar al final de `src/js/login.js`
-
-Agrega esto al final del archivo `login.js` que ya creaste:
-
-```javascript
 // ========================================
 // VALIDACIÓN DE REGISTRO
 // ========================================
@@ -2617,7 +2593,10 @@ Agrega esto al final del archivo `login.js` que ya creaste:
 // Verifica que las contraseñas coincidan
 function validarContrasenas(contrasena, confirmar) {
   if (contrasena.length < 8) {
-    mostrarError("contrasena", "La contraseña debe tener al menos 8 caracteres");
+    mostrarError(
+      "contrasena",
+      "La contraseña debe tener al menos 8 caracteres",
+    );
     return false;
   }
   if (contrasena !== confirmar) {
@@ -2627,11 +2606,10 @@ function validarContrasenas(contrasena, confirmar) {
   return true;
 }
 
-// Event listener para el formulario de registro
-// Solo se ejecuta si el formulario de registro existe en la página
-const registroForm = document.getElementById("registroForm");
+// El listener solo se crea si el formulario de registro existe en la página
+const registroForm = document.getElementById("registerForm");
 if (registroForm) {
-  registroForm.addEventListener("submit", function(event) {
+  registroForm.addEventListener("submit", function (event) {
     event.preventDefault();
     limpiarErrores();
 
@@ -2666,110 +2644,325 @@ if (registroForm) {
     if (esValido) {
       const registroExitoso = registrarUsuario(nombre, email, contrasena);
       if (registroExitoso) {
-        alert("¡Cuenta creada exitosamente! Ahora puedes iniciar sesión.");
+        alert("¡Cuenta creada con exito! Ahora puedes iniciar sesión.");
         window.location.href = "login.html";
       } else {
-        mostrarError("email", "Este email ya está registrado");
+        mostrarError("email", "El correo ya está registrado");
       }
     }
   });
 }
 ```
 
+> **Nota:** `login.js` sirve para login.html y registro.html. Los listeners se crean solo si existe el formulario correspondiente en la página (`if (loginForm)`, `if (registroForm)`).
+
 **Commit:**
 ```bash
-git add src/pages/registro.html src/js/login.js
+git add src/js/login.js
+git commit -m "feat: implementar validación de login y registro"
+```
+
+## 5.4. Fase 4: registro.html
+
+### HTML - Código completo
+
+Copia esto en `src/pages/registro.html`:
+
+```html
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Yorozu 万 / よろず - Registro</title>
+    <link rel="stylesheet" href="../css/styles-registro.css" />
+  </head>
+  <body class="register-page">
+    <header>
+      <h1>Yorozu 万 / よろず - Registro de productos</h1>
+      <section class="imagen-portada">
+        <img
+          src="../assets/images/portada.png"
+          alt="Portada de la tienda con productos"
+        />
+      </section>
+    </header>
+
+    <main class="register-main">
+      <h2>Registrarse en el Sistema</h2>
+      <form id="registerForm">
+        <label for="nombre">Nombre</label>
+        <input
+          type="text"
+          name="nombre"
+          id="nombre"
+          placeholder="Nombre de usuario"
+          autocomplete="name"
+          required
+        />
+        <span id="error-nombre" class="error-message"></span>
+
+        <label for="email">Correo Electrónico</label>
+        <input
+          type="email"
+          name="email"
+          id="email"
+          placeholder="cristobal@gmail.com"
+          autocomplete="email"
+          required
+        />
+        <span id="error-email" class="error-message"></span>
+
+        <label for="contrasena">Contraseña</label>
+        <input
+          type="password"
+          name="contrasena"
+          id="contrasena"
+          minlength="8"
+          autocomplete="new-password"
+          placeholder="Contraseña"
+          required
+        />
+        <span id="error-contrasena" class="error-message"></span>
+
+        <label for="confirmar">Confirmar Contraseña</label>
+        <input
+          type="password"
+          name="confirmar"
+          id="confirmar"
+          minlength="8"
+          autocomplete="new-password"
+          placeholder="Confirmar Contraseña"
+          required
+        />
+        <span id="error-confirmar" class="error-message"></span>
+
+        <button type="submit">Crear cuenta</button>
+      </form>
+      <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesion</a></p>
+    </main>
+
+    <footer>
+      <p>&copy; Registro de productos - Evaluación Fullstack II</p>
+    </footer>
+    <script src="../js/auth.js"></script>
+    <script src="../js/login.js"></script>
+    <script src="../js/transitions.js"></script>
+  </body>
+</html>
+```
+
+> **Nota:** No se agrega JavaScript nuevo aquí. La validación de registro ya está en `login.js` (sección 5.3), donde el listener de `#registerForm` se crea solo si el formulario existe.
+
+**Commit:**
+```bash
+git add src/pages/registro.html
 git commit -m "feat: crear página de registro con validación"
 ```
 
-## 5.6. Fase 6: index.html
+## 5.6. Fase 6: index.html - Panel de Productos
+
+El panel tiene **dos interfaces separadas** dentro del mismo HTML, conmutables con las pestañas: una para **registrar/editar** productos y otra para **verlos** en una tabla horizontal.
 
 ### HTML - Código completo
 
 Copia esto en `src/pages/index.html`:
 
 ```html
-<!DOCTYPE html>
+<!doctype html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="../css/styles.css">
-  <title>Productos - Mi Tienda</title>
-</head>
-<body>
-  <header>
-    <h1>Mi Tienda</h1>
-    <nav>
-      <ul>
-        <li><a href="index.html">PRODUCTOS</a></li>
-        <li><a href="#" id="cerrarSesion">CERRAR SESIÓN</a></li>
-      </ul>
-    </nav>
-  </header>
-  <main>
-    <section>
-      <h2>Registrar Producto</h2>
-      <article>
-        <form id="productoForm">
-          <label for="prodId">ID</label>
-          <input type="number" id="prodId" name="prodId"
-                 min="1" required>
-          <span id="error-prodId" class="error-message"></span>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="../css/styles.css" />
+    <title>Yorozu 万 / よろず - Panel de Productos</title>
+  </head>
+  <body>
+    <header>
+      <h1>Yorozu 万 / よろず - Registro de productos</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">PRODUCTOS</a></li>
+          <li><a href="#" id="cerrar-sesion">CERRAR SESIÓN</a></li>
+        </ul>
+      </nav>
+    </header>
 
-          <label for="prodNombre">Nombre</label>
-          <input type="text" id="prodNombre" name="prodNombre"
-                 placeholder="Ej: Laptop HP" required>
-          <span id="error-prodNombre" class="error-message"></span>
+    <main>
+      <nav class="vistas-nav" aria-label="Secciones del panel">
+        <button
+          type="button"
+          class="tab-btn activa"
+          data-vista="registro"
+          aria-selected="true"
+        >
+          Registrar Producto
+        </button>
+        <button
+          type="button"
+          class="tab-btn"
+          data-vista="lista"
+          aria-selected="false"
+        >
+          Ver Productos
+        </button>
+      </nav>
 
-          <label for="prodDescripcion">Descripción</label>
-          <textarea id="prodDescripcion" name="prodDescripcion"
-                    rows="3" placeholder="Describe el producto..."
-                    required></textarea>
-          <span id="error-prodDescripcion" class="error-message"></span>
+      <section
+        id="vista-registro"
+        class="vista activa"
+        aria-labelledby="registro-producto-title"
+      >
+        <h2 id="registro-producto-title">Registrar Producto</h2>
+        <article>
+          <form id="productoForm" novalidate>
+            <label for="prodId">ID</label>
+            <input
+              type="number"
+              id="prodId"
+              name="prodId"
+              min="1"
+              placeholder="1"
+              required
+            />
+            <span
+              id="error-prodId"
+              class="error-message"
+              aria-live="polite"
+            ></span>
 
-          <label for="prodPrecio">Precio</label>
-          <input type="number" id="prodPrecio" name="prodPrecio"
-                 min="0" step="0.01" placeholder="19999" required>
-          <span id="error-prodPrecio" class="error-message"></span>
+            <label for="prodNombre">Nombre</label>
+            <input
+              type="text"
+              id="prodNombre"
+              name="prodNombre"
+              placeholder="Ej: Laptop HP"
+              autocomplete="off"
+              required
+            />
+            <span
+              id="error-prodNombre"
+              class="error-message"
+              aria-live="polite"
+            ></span>
 
-          <label for="prodCategoria">Categoría</label>
-          <select id="prodCategoria" name="prodCategoria" required>
-            <option value="">-- Selecciona una categoría --</option>
-            <option value="electronica">Electrónica</option>
-            <option value="ropa">Ropa</option>
-            <option value="alimentos">Alimentos</option>
-            <option value="otros">Otros</option>
-          </select>
-          <span id="error-prodCategoria" class="error-message"></span>
+            <label for="prodDescripcion">Descripción</label>
+            <textarea
+              id="prodDescripcion"
+              name="prodDescripcion"
+              rows="3"
+              placeholder="Describe el producto..."
+              required
+            ></textarea>
+            <span
+              id="error-prodDescripcion"
+              class="error-message"
+              aria-live="polite"
+            ></span>
 
-          <label for="prodStock">Stock</label>
-          <input type="number" id="prodStock" name="prodStock"
-                 min="0" placeholder="10" required>
-          <span id="error-prodStock" class="error-message"></span>
+            <label for="prodPrecio">Precio</label>
+            <input
+              type="number"
+              id="prodPrecio"
+              name="prodPrecio"
+              min="0"
+              step="0.01"
+              placeholder="19999"
+              required
+            />
+            <span
+              id="error-prodPrecio"
+              class="error-message"
+              aria-live="polite"
+            ></span>
 
-          <label for="prodImagen">URL de la Imagen</label>
-          <input type="url" id="prodImagen" name="prodImagen"
-                 placeholder="https://ejemplo.com/imagen.jpg" required>
-          <span id="error-prodImagen" class="error-message"></span>
+            <label for="prodCategoria">Categoría</label>
+            <select id="prodCategoria" name="prodCategoria" required>
+              <option value="">-- Selecciona una categoría --</option>
+              <option value="electronica">Electrónica</option>
+              <option value="ropa">Ropa</option>
+              <option value="alimentos">Alimentos</option>
+              <option value="otros">Otros</option>
+            </select>
+            <span
+              id="error-prodCategoria"
+              class="error-message"
+              aria-live="polite"
+            ></span>
 
-          <button type="submit" id="btnRegistrar">Registrar Producto</button>
-        </form>
-      </article>
-    </section>
-    <section>
-      <h2>Productos Registrados</h2>
-      <div id="contenedorProductos" class="contenedor-productos">
-        <!-- JavaScript genera las tarjetas de productos aquí -->
-      </div>
-    </section>
-  </main>
-  <footer>
-    <p>&copy; 2026 Mi Tienda - Evaluación Fullstack II</p>
-  </footer>
-  <script src="../js/auth.js"></script>
-  <script src="../js/app.js"></script>
-</body>
+            <label for="prodStock">Stock</label>
+            <input
+              type="number"
+              id="prodStock"
+              name="prodStock"
+              min="0"
+              placeholder="10"
+              required
+            />
+            <span
+              id="error-prodStock"
+              class="error-message"
+              aria-live="polite"
+            ></span>
+
+            <label for="prodImagen">URL de la Imagen</label>
+            <input
+              type="url"
+              id="prodImagen"
+              name="prodImagen"
+              placeholder="https://ejemplo.com/imagen.jpg"
+              required
+            />
+            <span
+              id="error-prodImagen"
+              class="error-message"
+              aria-live="polite"
+            ></span>
+
+            <button type="submit" id="btnRegistrar">Registrar Producto</button>
+          </form>
+        </article>
+      </section>
+
+      <section
+        id="vista-lista"
+        class="vista"
+        aria-labelledby="productos-title"
+      >
+        <div class="lista-cabecera">
+          <h2 id="productos-title">Productos Registrados</h2>
+          <button type="button" id="btn-nuevo-producto">
+            Agregar Producto
+          </button>
+        </div>
+        <article class="tabla-contenedor">
+          <table aria-label="Lista de productos registrados">
+            <thead>
+              <tr>
+                <th scope="col">Imagen</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Categoría</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="contenedorProductos">
+              <!-- JavaScript genera las filas de productos aquí -->
+            </tbody>
+          </table>
+        </article>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; Registro de productos - Evaluación Fullstack II</p>
+    </footer>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/app.js"></script>
+  </body>
 </html>
 ```
 
@@ -2778,6 +2971,23 @@ Copia esto en `src/pages/index.html`:
 Copia esto en `src/js/app.js`:
 
 ```javascript
+// ========================================
+// VERIFICACIÓN DE SESIÓN
+// ========================================
+
+// Si no hay sesión activa, redirige a login.html
+verificarSesion();
+
+// ========================================
+// VARIABLES GLOBALES
+// ========================================
+
+// Array para guardar los productos (en memoria)
+let productos = [];
+
+// ID del producto que se está editando (null si no se está editando)
+let editandoId = null;
+
 // ========================================
 // FUNCIONES DE UTILIDAD
 // ========================================
@@ -2791,44 +3001,39 @@ function mostrarError(campo, mensaje) {
   }
 }
 
+// Muestra una de las dos vistas del panel y marca la pestaña activa
+function mostrarVista(vista) {
+  document.querySelectorAll(".vista").forEach(function (seccion) {
+    seccion.classList.toggle("activa", seccion.id === "vista-" + vista);
+  });
+
+  document.querySelectorAll(".tab-btn").forEach(function (boton) {
+    const activo = boton.dataset.vista === vista;
+    boton.classList.toggle("activa", activo);
+    boton.setAttribute("aria-selected", activo ? "true" : "false");
+  });
+}
+
 // Oculta todos los mensajes de error
 function limpiarErrores() {
   const errores = document.querySelectorAll(".error-message");
-  errores.forEach(function(error) {
+  errores.forEach(function (error) {
     error.textContent = "";
     error.style.display = "none";
   });
 }
 
 // ========================================
-// VERIFICACIÓN DE SESIÓN
-// ========================================
-
-// Si no hay sesión activa, redirigir a login.html
-verificarSesion();
-
-// ========================================
-// VARIABLES GLOBALES
-// ========================================
-
-// Array para guardar todos los productos (en memoria)
-let productos = [];
-
-// Contador para generar IDs únicos
-let contadorID = 1;
-
-// ID del producto que se está editando (null si no se está editando)
-let editandoId = null;
-
-// ========================================
 // CERRAR SESIÓN
 // ========================================
 
-document.getElementById("cerrarSesion").addEventListener("click", function(event) {
-  event.preventDefault();
-  cerrarSesion();
-  window.location.href = "login.html";
-});
+document
+  .getElementById("cerrar-sesion")
+  .addEventListener("click", function (event) {
+    event.preventDefault();
+    cerrarSesion();
+    window.location.href = "login.html";
+  });
 
 // ========================================
 // FUNCIONES CRUD
@@ -2892,19 +3097,18 @@ function registrarProducto(event) {
 
   // Crear objeto producto
   const producto = {
-    id: parseInt(id),
+    id: parseInt(id, 10),
     nombre: nombre,
     descripcion: descripcion,
     precio: parseFloat(precio),
     categoria: categoria,
-    stock: parseInt(stock),
-    imagen: imagen
+    stock: parseInt(stock, 10),
+    imagen: imagen,
   };
 
   // Si estamos editando, actualizar. Si no, agregar nuevo.
   if (editandoId !== null) {
-    // Actualizar producto existente
-    const indice = productos.findIndex(p => p.id === editandoId);
+    const indice = productos.findIndex((p) => p.id === editandoId);
     if (indice !== -1) {
       productos[indice] = producto;
     }
@@ -2912,41 +3116,53 @@ function registrarProducto(event) {
     document.getElementById("btnRegistrar").textContent = "Registrar Producto";
   } else {
     // Verificar que el ID no exista
-    const existe = productos.some(p => p.id === parseInt(id));
+    const existe = productos.some((p) => p.id === producto.id);
     if (existe) {
       mostrarError("prodId", "Ya existe un producto con ese ID");
       return;
     }
-    // Agregar nuevo producto
     productos.push(producto);
   }
 
-  // Actualizar la lista visual
+  // Actualizar la lista visual y mostrar la vista de productos
   renderizarProductos();
+  mostrarVista("lista");
 
   // Limpiar el formulario
   limpiarFormulario();
 }
 
-// Renderizar (mostrar) todos los productos en la página
+// Renderizar (mostrar) todos los productos en una tabla horizontal
 function renderizarProductos() {
   const contenedor = document.getElementById("contenedorProductos");
+
+  if (productos.length === 0) {
+    contenedor.innerHTML = `
+      <tr>
+        <td colspan="7" class="sin-productos">No hay productos registrados.</td>
+      </tr>
+    `;
+    return;
+  }
+
   let html = "";
 
-  productos.forEach(function(producto) {
+  productos.forEach(function (producto) {
     html += `
-      <article class="producto-card">
-        <img src="${producto.imagen}" alt="${producto.nombre}" loading="lazy">
-        <h3>${producto.nombre}</h3>
-        <p class="descripcion">${producto.descripcion}</p>
-        <p class="precio">$${producto.precio}</p>
-        <p class="categoria">Categoría: ${producto.categoria}</p>
-        <p class="stock">Stock: ${producto.stock}</p>
-        <div class="botones-card">
+      <tr>
+        <td data-label="Imagen">
+          <img src="${producto.imagen}" alt="${producto.nombre}" loading="lazy">
+        </td>
+        <td data-label="Nombre">${producto.nombre}</td>
+        <td data-label="Descripción">${producto.descripcion}</td>
+        <td data-label="Precio">$${producto.precio}</td>
+        <td data-label="Categoría">${producto.categoria}</td>
+        <td data-label="Stock">${producto.stock}</td>
+        <td class="acciones">
           <button onclick="editarProducto(${producto.id})" class="btn-editar">Editar</button>
           <button onclick="eliminarProducto(${producto.id})" class="btn-eliminar">Eliminar</button>
-        </div>
-      </article>
+        </td>
+      </tr>
     `;
   });
 
@@ -2955,7 +3171,7 @@ function renderizarProductos() {
 
 // Cargar un producto en el formulario para editarlo
 function editarProducto(id) {
-  const producto = productos.find(p => p.id === id);
+  const producto = productos.find((p) => p.id === id);
   if (!producto) return;
 
   // Llenar el formulario con los datos del producto
@@ -2971,13 +3187,16 @@ function editarProducto(id) {
   // Cambiar el botón a "Actualizar"
   editandoId = id;
   document.getElementById("btnRegistrar").textContent = "Actualizar Producto";
+
+  // Mostrar la vista del formulario para editar
+  mostrarVista("registro");
 }
 
 // Eliminar un producto
 function eliminarProducto(id) {
   if (!confirm("¿Estás seguro de eliminar este producto?")) return;
 
-  productos = productos.filter(p => p.id !== id);
+  productos = productos.filter((p) => p.id !== id);
   renderizarProductos();
 }
 
@@ -2993,8 +3212,30 @@ function limpiarFormulario() {
 // EVENT LISTENER
 // ========================================
 
-document.getElementById("productoForm").addEventListener("submit", registrarProducto);
+document
+  .getElementById("productoForm")
+  .addEventListener("submit", registrarProducto);
+
+// Cambiar de vista con las pestañas
+document.querySelectorAll(".tab-btn").forEach(function (boton) {
+  boton.addEventListener("click", function () {
+    mostrarVista(boton.dataset.vista);
+  });
+});
+
+// Botón "Agregar Producto": limpia el formulario y va a la vista de registro
+document
+  .getElementById("btn-nuevo-producto")
+  .addEventListener("click", function () {
+    limpiarFormulario();
+    mostrarVista("registro");
+  });
+
+// ponytail: productos en memoria (sin persistencia), el plan exige array en memoria.
+// Para persistir entre recargas, usar localStorage agregando 2 líneas en registrar/eliminar.
 ```
+
+> **Nota:** `app.js` NO se carga en `login.html` ni `registro.html`. Solo existe en `index.html` (protegido). Al cargar ejecuta `verificarSesion()`; si no hay sesión, `auth.js` redirige a login.
 
 **Commit:**
 ```bash
@@ -3002,351 +3243,1086 @@ git add src/pages/index.html src/js/app.js
 git commit -m "feat: crear página principal con CRUD de productos"
 ```
 
-## 5.7. Fase 7: styles.css
+## 5.7. Fase 7: styles-login.css
+
+### CSS - Código completo
+
+Copia esto en `src/css/styles-login.css`:
+
+```css
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-card: #1a2035;
+  --bg-input: #0d1321;
+  --border-subtle: #1e293b;
+  --border-focus: #00d4ff;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-cyan: #00d4ff;
+  --accent-cyan-dim: rgba(0, 212, 255, 0.15);
+  --accent-purple: #a855f7;
+  --accent-purple-dim: rgba(168, 85, 247, 0.12);
+  --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.3), 0 0 60px rgba(0, 212, 255, 0.1);
+  --glow-purple:
+    0 0 20px rgba(168, 85, 247, 0.3), 0 0 60px rgba(168, 85, 247, 0.1);
+  --radius: 6px;
+  --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+  color-scheme: dark;
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+body.login-page {
+  margin: 0;
+  padding: 0;
+  font-family:
+    "Outfit",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--accent-cyan-dim);
+  color: var(--accent-cyan);
+}
+
+header {
+  width: 100%;
+  max-width: 1100px;
+  text-align: right;
+  padding: 24px 32px;
+}
+
+header h1 {
+  font-size: 25px;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.login-main {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 48px;
+  row-gap: 0;
+  width: 100%;
+  max-width: 1100px;
+  align-items: center;
+  justify-items: center;
+  padding: 0 32px;
+  flex: 1;
+}
+
+.imagen-portada {
+  border-radius: 10px;
+  grid-column: 1;
+  grid-row: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  justify-self: center;
+}
+
+.imagen-portada img {
+  border-radius: 10px;
+  max-width: 100%;
+  height: auto;
+  display: block;
+  border: 2px solid #0ff;
+  opacity: 0.9;
+  transition: opacity var(--transition);
+  box-shadow:
+    0 0 10px #0ff,
+    0 0 20px #0ff,
+    inset 0 0 10px #0ff;
+}
+
+.imagen-portada img:hover {
+  opacity: 1;
+}
+
+.login-section {
+  grid-column: 2;
+  grid-row: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  justify-self: center;
+  width: 100%;
+  max-width: 380px;
+  view-transition-name: main-card;
+}
+
+.boton-cuenta-nueva {
+  width: 100%;
+  max-width: 320px;
+  margin-top: 28px;
+  padding-top: 20px;
+  border-top: 1px solid var(--border-subtle);
+  text-align: center;
+  font-size: 14px;
+}
+
+.login-section h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 320px;
+}
+
+form label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+
+form input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: "Outfit", sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+  outline: none;
+}
+
+form input::placeholder {
+  color: var(--text-muted);
+}
+
+form input:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px var(--accent-cyan-dim);
+}
+
+form button {
+  width: 100%;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
+  color: var(--bg-primary);
+  background: var(--accent-cyan);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
+  margin-top: 4px;
+  letter-spacing: 0.02em;
+}
+
+form button:hover {
+  background: #33dfff;
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-1px);
+}
+
+form button:active {
+  transform: translateY(0);
+}
+
+.boton-cuenta-nueva {
+  grid-column: 2;
+  grid-row: 1;
+  text-align: center;
+  font-size: 14px;
+  align-self: end;
+  justify-self: center;
+  width: 100%;
+  max-width: 380px;
+  padding-bottom: 24px;
+}
+
+.boton-cuenta-nueva p {
+  margin-bottom: 8px;
+  color: var(--text-secondary);
+}
+
+.boton-cuenta-nueva a.button {
+  color: var(--accent-purple);
+  text-decoration: none;
+  font-weight: 500;
+  transition:
+    color var(--transition),
+    text-shadow var(--transition);
+}
+
+.boton-cuenta-nueva a.button:hover {
+  color: #c084fc;
+  text-shadow: var(--glow-purple);
+}
+
+.error-message {
+  color: #f87171;
+  font-size: 12px;
+  margin-top: -14px;
+  margin-bottom: 8px;
+  min-height: 16px;
+}
+
+footer {
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  padding: 24px 32px;
+  border-top: 1px solid var(--border-subtle);
+}
+
+footer a {
+  color: var(--text-muted);
+  text-decoration: none;
+  margin: 0 12px;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  transition: color var(--transition);
+}
+
+footer a:hover {
+  color: var(--accent-cyan);
+}
+
+footer p {
+  margin-top: 12px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+@media (max-width: 768px) {
+  .login-main {
+    grid-template-columns: 1fr;
+    gap: 32px;
+    padding: 0 20px;
+    justify-items: center;
+  }
+
+  .imagen-portada {
+    grid-column: 1;
+    grid-row: auto;
+    order: -1;
+    justify-self: center;
+  }
+
+  .imagen-portada img {
+    max-width: 320px;
+  }
+
+  .login-section {
+    grid-column: 1;
+    grid-row: auto;
+    padding: 28px;
+    max-width: 380px;
+    width: 100%;
+  }
+
+  header {
+    text-align: center;
+    padding: 20px;
+  }
+}
+```
+
+**Commit:**
+```bash
+git add src/css/styles-login.css
+git commit -m "feat: crear estilos CSS para la página de login"
+```
+
+## 5.8. Fase 8: styles-registro.css
+
+### CSS - Código completo
+
+Copia esto en `src/css/styles-registro.css`:
+
+```css
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-card: #1a2035;
+  --bg-input: #0d1321;
+  --border-subtle: #1e293b;
+  --border-focus: #00d4ff;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-cyan: #00d4ff;
+  --accent-cyan-dim: rgba(0, 212, 255, 0.15);
+  --accent-purple: #a855f7;
+  --accent-purple-dim: rgba(168, 85, 247, 0.12);
+  --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.3), 0 0 60px rgba(0, 212, 255, 0.1);
+  --glow-purple:
+    0 0 20px rgba(168, 85, 247, 0.3), 0 0 60px rgba(168, 85, 247, 0.1);
+  --radius: 6px;
+  --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+html {
+  color-scheme: dark;
+}
+
+@view-transition {
+  navigation: auto;
+}
+
+body.register-page {
+  margin: 0;
+  padding: 0;
+  font-family:
+    "Outfit",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background: var(--accent-cyan-dim);
+  color: var(--accent-cyan);
+}
+
+header {
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 32px;
+}
+
+header h1 {
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+  color: var(--text-muted);
+  text-transform: uppercase;
+}
+
+.imagen-portada {
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--accent-cyan);
+  box-shadow: var(--glow-cyan);
+}
+
+.imagen-portada img {
+  display: block;
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  transform: scale(1.7);
+  transform-origin: center;
+  opacity: 0.9;
+  transition: opacity var(--transition);
+}
+
+.imagen-portada:hover {
+  opacity: 1;
+}
+
+.register-main {
+  width: 100%;
+  max-width: 460px;
+  padding: 40px 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  margin: 0 20px 40px;
+  view-transition-name: main-card;
+}
+
+.register-main h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 32px;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+}
+
+form label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
+}
+
+form input {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: "Outfit", sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+  outline: none;
+}
+
+form input::placeholder {
+  color: var(--text-muted);
+}
+
+form input:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px var(--accent-cyan-dim);
+}
+
+form button {
+  width: 100%;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
+  color: var(--bg-primary);
+  background: var(--accent-cyan);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
+  margin-top: 4px;
+  letter-spacing: 0.02em;
+}
+
+form button:hover {
+  background: #33dfff;
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-1px);
+}
+
+form button:active {
+  transform: translateY(0);
+}
+
+.register-main p {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  color: var(--text-secondary);
+}
+
+.register-main p a {
+  color: var(--accent-purple);
+  text-decoration: none;
+  font-weight: 500;
+  transition:
+    color var(--transition),
+    text-shadow var(--transition);
+}
+
+.register-main p a:hover {
+  color: #c084fc;
+  text-shadow: var(--glow-purple);
+}
+
+.error-message {
+  color: #f87171;
+  font-size: 12px;
+  margin-top: -14px;
+  margin-bottom: 8px;
+  min-height: 16px;
+}
+
+footer {
+  width: 100%;
+  text-align: center;
+  font-size: 12px;
+  padding: 24px 32px;
+  border-top: 1px solid var(--border-subtle);
+  margin-top: auto;
+}
+
+footer a {
+  color: var(--text-muted);
+  text-decoration: none;
+  margin: 0 12px;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  transition: color var(--transition);
+}
+
+footer a:hover {
+  color: var(--accent-cyan);
+}
+
+footer p {
+  margin-top: 12px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+@media (max-width: 768px) {
+  .register-main {
+    padding: 28px 20px;
+    margin: 0 16px 32px;
+  }
+
+  .register-main h2 {
+    font-size: 24px;
+  }
+
+  header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+  }
+}
+```
+
+**Commit:**
+```bash
+git add src/css/styles-registro.css
+git commit -m "feat: crear estilos CSS para la página de registro"
+```
+
+## 5.9. Fase 9: styles.css - Panel de Productos
+
+`index.html` enlaza los estilos del panel con `../css/styles.css`. Usa las mismas variables del tema dark cyberpunk (cyan/purple) de las otras dos hojas.
 
 ### CSS - Código completo
 
 Copia esto en `src/css/styles.css`:
 
 ```css
-/* ==================== */
-/* RESET Y VARIABLES    */
-/* ==================== */
-* {
+@import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
 :root {
-  --color-primario: #2563eb;
-  --color-primario-oscuro: #1e40af;
-  --color-exito: #16a34a;
-  --color-error: #dc2626;
-  --color-texto: #1f2937;
-  --color-texto-claro: #6b7280;
-  --color-fondo: #f9fafb;
-  --color-borde: #e5e7eb;
-  --color-blanco: #ffffff;
-  --radio-borde: 8px;
-  --sombra: 0 2px 8px rgba(0, 0, 0, 0.1);
+  --bg-primary: #0a0e17;
+  --bg-secondary: #111827;
+  --bg-card: #1a2035;
+  --bg-input: #0d1321;
+  --border-subtle: #1e293b;
+  --border-focus: #00d4ff;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+  --accent-cyan: #00d4ff;
+  --accent-cyan-dim: rgba(0, 212, 255, 0.15);
+  --accent-purple: #a855f7;
+  --accent-purple-dim: rgba(168, 85, 247, 0.12);
+  --glow-cyan: 0 0 20px rgba(0, 212, 255, 0.3), 0 0 60px rgba(0, 212, 255, 0.1);
+  --glow-purple:
+    0 0 20px rgba(168, 85, 247, 0.3), 0 0 60px rgba(168, 85, 247, 0.1);
+  --radius: 6px;
+  --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* ==================== */
-/* TIPOGRAFÍA           */
-/* ==================== */
+html {
+  color-scheme: dark;
+}
+
+@view-transition {
+  navigation: auto;
+}
+
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  font-size: 1rem;
-  line-height: 1.6;
-  color: var(--color-texto);
-  background-color: var(--color-fondo);
+  margin: 0;
+  padding: 0;
+  font-family:
+    "Outfit",
+    system-ui,
+    -apple-system,
+    sans-serif;
+  background-color: var(--bg-primary);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-h1 {
-  font-size: 2rem;
-  font-weight: bold;
+::selection {
+  background: var(--accent-cyan-dim);
+  color: var(--accent-cyan);
 }
 
-h2 {
-  font-size: 1.5rem;
-  font-weight: bold;
-  margin-bottom: 1rem;
-}
-
-h3 {
-  font-size: 1.2rem;
-  font-weight: bold;
-  margin-bottom: 0.5rem;
-}
-
-/* ==================== */
-/* HEADER               */
-/* ==================== */
 header {
-  background-color: var(--color-primario);
-  color: var(--color-blanco);
-  padding: 1.5rem 2rem;
-  text-align: center;
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 24px 32px;
 }
 
-/* ==================== */
-/* NAV                  */
-/* ==================== */
-nav {
-  background-color: var(--color-primario-oscuro);
-  padding: 0.75rem 2rem;
+header h1 {
+  font-size: 20px;
+  font-weight: 500;
+  text-align: center;
+  color: var(--text-muted);
+  text-transform: uppercase;
 }
 
 nav ul {
-  list-style: none;
   display: flex;
-  justify-content: center;
-  gap: 2rem;
+  align-items: center;
+  gap: 20px;
+  list-style: none;
 }
 
 nav a {
-  color: var(--color-blanco);
+  color: var(--text-muted);
   text-decoration: none;
-  font-weight: bold;
-  transition: color 0.3s ease;
+  text-transform: uppercase;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  transition:
+    color var(--transition),
+    text-shadow var(--transition);
 }
 
 nav a:hover {
-  color: var(--color-borde);
+  color: var(--accent-cyan);
+  text-shadow: var(--glow-cyan);
 }
 
-/* ==================== */
-/* MAIN                 */
-/* ==================== */
+nav #cerrar-sesion:hover {
+  color: #f87171;
+  text-shadow: none;
+}
+
 main {
-  max-width: 1000px;
-  margin: 2rem auto;
-  padding: 0 1rem;
+  width: 100%;
+  max-width: 1100px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 0 32px 40px;
+  flex: 1;
 }
 
-section {
-  margin-bottom: 2rem;
-  background-color: var(--color-blanco);
-  padding: 1.5rem;
-  border-radius: var(--radio-borde);
-  box-shadow: var(--sombra);
+main h2 {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
 }
 
-/* ==================== */
-/* FORMULARIOS          */
-/* ==================== */
+.vistas-nav {
+  display: flex;
+  gap: 8px;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.vistas-nav .tab-btn {
+  padding: 10px 18px;
+  background: transparent;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  border-radius: var(--radius) var(--radius) 0 0;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition:
+    color var(--transition),
+    border-color var(--transition),
+    background var(--transition);
+}
+
+.vistas-nav .tab-btn:hover {
+  color: var(--text-secondary);
+}
+
+.vistas-nav .tab-btn.activa {
+  color: var(--accent-cyan);
+  background: var(--bg-card);
+  border-color: var(--border-subtle);
+  border-bottom-color: var(--bg-card);
+}
+
+.vista {
+  display: none;
+}
+
+.vista.activa {
+  display: block;
+}
+
+section article,
+.tabla-contenedor {
+  padding: 32px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  view-transition-name: main-card;
+}
+
+.lista-cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.lista-cabecera h2 {
+  margin-bottom: 16px;
+}
+
+#btn-nuevo-producto {
+  padding: 10px 18px;
+  font-size: 13px;
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
+  color: var(--accent-cyan);
+  background: transparent;
+  border: 1px solid var(--accent-cyan);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    box-shadow var(--transition);
+}
+
+#btn-nuevo-producto:hover {
+  background: var(--accent-cyan-dim);
+  box-shadow: var(--glow-cyan);
+}
+
+.tabla-contenedor {
+  padding: 0;
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  min-width: 720px;
+}
+
+thead th {
+  text-align: left;
+  padding: 14px 16px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+tbody td {
+  padding: 14px 16px;
+  color: var(--text-secondary);
+  border-bottom: 1px solid var(--border-subtle);
+  vertical-align: middle;
+}
+
+tbody tr:last-child td {
+  border-bottom: none;
+}
+
+tbody tr {
+  transition: background var(--transition);
+}
+
+tbody tr:hover {
+  background: rgba(30, 41, 59, 0.5);
+}
+
+tbody img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--border-subtle);
+  display: block;
+}
+
+td.acciones {
+  white-space: nowrap;
+}
+
+.acciones button {
+  padding: 6px 12px;
+  margin-right: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
+  background: transparent;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    color var(--transition),
+    box-shadow var(--transition);
+}
+
+.acciones .btn-editar {
+  color: var(--accent-cyan);
+  border: 1px solid var(--accent-cyan);
+}
+
+.acciones .btn-editar:hover {
+  background: var(--accent-cyan-dim);
+  box-shadow: var(--glow-cyan);
+}
+
+.acciones .btn-eliminar {
+  color: #f87171;
+  border: 1px solid #f87171;
+  margin-right: 0;
+}
+
+.acciones .btn-eliminar:hover {
+  background: rgba(248, 113, 113, 0.12);
+  box-shadow: 0 0 20px rgba(248, 113, 113, 0.3);
+}
+
+.sin-productos {
+  text-align: center;
+  padding: 40px 16px;
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
 form {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-}
-
-label {
-  font-weight: bold;
-  font-size: 0.9rem;
-  color: var(--color-texto);
-}
-
-input,
-textarea,
-select {
-  padding: 0.75rem;
-  border: 1px solid var(--color-borde);
-  border-radius: var(--radio-borde);
-  font-size: 1rem;
-  font-family: inherit;
-  transition: border-color 0.3s ease, box-shadow 0.3s ease;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-  outline: none;
-  border-color: var(--color-primario);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
-}
-
-textarea {
-  resize: vertical;
-}
-
-/* ==================== */
-/* BOTONES              */
-/* ==================== */
-button {
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: var(--radio-borde);
-  font-size: 1rem;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s ease, transform 0.1s ease;
-}
-
-button[type="submit"] {
-  background-color: var(--color-primario);
-  color: var(--color-blanco);
-}
-
-button[type="submit"]:hover {
-  background-color: var(--color-primario-oscuro);
-}
-
-button[type="submit"]:active {
-  transform: scale(0.98);
-}
-
-/* ==================== */
-/* MENSAJES DE ERROR    */
-/* ==================== */
-.error-message {
-  color: var(--color-error);
-  font-size: 0.85rem;
-  display: none;
-  margin-top: -0.5rem;
-}
-
-/* ==================== */
-/* TARJETAS PRODUCTOS   */
-/* ==================== */
-.contenedor-productos {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1.5rem;
-  justify-content: center;
-}
-
-.producto-card {
-  width: 280px;
-  border: 1px solid var(--color-borde);
-  border-radius: var(--radio-borde);
-  padding: 1rem;
-  background-color: var(--color-blanco);
-  box-shadow: var(--sombra);
-  transition: box-shadow 0.3s ease, transform 0.3s ease;
-}
-
-.producto-card:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
-}
-
-.producto-card img {
+  align-items: flex-start;
   width: 100%;
-  height: 180px;
-  object-fit: cover;
-  border-radius: var(--radio-borde);
-  margin-bottom: 0.75rem;
 }
 
-.producto-card .descripcion {
-  color: var(--color-texto-claro);
-  font-size: 0.9rem;
-  margin-bottom: 0.5rem;
+form label {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+  letter-spacing: 0.02em;
 }
 
-.producto-card .precio {
-  font-size: 1.2rem;
-  font-weight: bold;
-  color: var(--color-primario);
-  margin-bottom: 0.5rem;
+form input,
+form textarea,
+form select {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 14px;
+  font-family: "Outfit", sans-serif;
+  color: var(--text-primary);
+  background: var(--bg-input);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  transition:
+    border-color var(--transition),
+    box-shadow var(--transition);
+  outline: none;
 }
 
-.producto-card .categoria,
-.producto-card .stock {
-  font-size: 0.85rem;
-  color: var(--color-texto-claro);
-  margin-bottom: 0.25rem;
+form textarea {
+  resize: vertical;
+  line-height: 1.5;
 }
 
-.botones-card {
-  display: flex;
-  gap: 0.5rem;
-  margin-top: 0.75rem;
+form select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  padding-right: 40px;
 }
 
-.btn-editar {
-  flex: 1;
-  background-color: var(--color-exito);
-  color: var(--color-blanco);
-  font-size: 0.85rem;
-  padding: 0.5rem;
+form input:disabled {
+  color: var(--text-muted);
+  cursor: not-allowed;
 }
 
-.btn-editar:hover {
-  background-color: #15803d;
+form input::placeholder,
+form textarea::placeholder {
+  color: var(--text-muted);
 }
 
-.btn-eliminar {
-  flex: 1;
-  background-color: var(--color-error);
-  color: var(--color-blanco);
-  font-size: 0.85rem;
-  padding: 0.5rem;
+form input:focus,
+form textarea:focus,
+form select:focus {
+  border-color: var(--accent-cyan);
+  box-shadow: 0 0 0 3px var(--accent-cyan-dim);
 }
 
-.btn-eliminar:hover {
-  background-color: #b91c1c;
+form button {
+  width: 100%;
+  padding: 12px 24px;
+  font-size: 14px;
+  font-weight: 600;
+  font-family: "Outfit", sans-serif;
+  color: var(--bg-primary);
+  background: var(--accent-cyan);
+  border: none;
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition:
+    background var(--transition),
+    box-shadow var(--transition),
+    transform var(--transition);
+  margin-top: 4px;
+  letter-spacing: 0.02em;
 }
 
-/* ==================== */
-/* LANDING PAGE         */
-/* ==================== */
-.acceso-container {
-  text-align: center;
+form button:hover {
+  background: #33dfff;
+  box-shadow: var(--glow-cyan);
+  transform: translateY(-1px);
 }
 
-.botones-acceso {
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  margin-top: 1.5rem;
-  flex-wrap: wrap;
+form button:active {
+  transform: translateY(0);
 }
 
-.btn-acceso {
-  display: inline-block;
-  padding: 1rem 2rem;
-  background-color: var(--color-primario);
-  color: var(--color-blanco);
-  text-decoration: none;
-  border-radius: var(--radio-borde);
-  font-weight: bold;
-  font-size: 1.1rem;
-  transition: background-color 0.3s ease, transform 0.1s ease;
+.error-message {
+  color: #f87171;
+  font-size: 12px;
+  margin-top: -14px;
+  margin-bottom: 8px;
+  min-height: 16px;
 }
 
-.btn-acceso:hover {
-  background-color: var(--color-primario-oscuro);
-  transform: scale(1.02);
-}
-
-.btn-registro {
-  background-color: var(--color-exito);
-}
-
-.btn-registro:hover {
-  background-color: #15803d;
-}
-
-/* ==================== */
-/* FOOTER               */
-/* ==================== */
 footer {
-  background-color: var(--color-texto);
-  color: var(--color-texto-claro);
+  width: 100%;
   text-align: center;
-  padding: 1.5rem;
-  margin-top: 2rem;
+  font-size: 12px;
+  padding: 24px 32px;
+  border-top: 1px solid var(--border-subtle);
 }
 
-/* ==================== */
-/* RESPONSIVE           */
-/* ==================== */
+footer p {
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
 @media (max-width: 768px) {
-  h1 {
-    font-size: 1.5rem;
+  main {
+    padding: 0 20px 32px;
   }
 
-  nav ul {
+  header {
     flex-direction: column;
     align-items: center;
-    gap: 0.75rem;
+    text-align: center;
+    padding: 20px;
   }
 
-  .contenedor-productos {
+  section article,
+  .tabla-contenedor {
+    padding: 24px 20px;
+  }
+
+  .tabla-contenedor {
+    padding: 0;
+  }
+
+  .lista-cabecera {
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
   }
 
-  .producto-card {
-    width: 100%;
-    max-width: 400px;
-  }
-
-  .botones-acceso {
-    flex-direction: column;
+  main h2 {
+    font-size: 24px;
   }
 }
 ```
@@ -3354,10 +4330,117 @@ footer {
 **Commit:**
 ```bash
 git add src/css/styles.css
-git commit -m "feat: agregar estilos CSS completos"
+git commit -m "feat: agregar estilos CSS para el panel de productos"
 ```
 
-## 5.8. Fase 8: Pulido y pruebas
+## 5.10. Fase 10: transitions.js
+
+### JavaScript - Código completo
+
+Copia esto en `src/js/transitions.js`:
+
+```javascript
+const isLogin = document.body.classList.contains("login-page");
+const card =
+  document.querySelector(".login-section") ||
+  document.querySelector(".register-main");
+const h1 = document.querySelector("header h1");
+const trigger =
+  document.querySelector(".boton-cuenta-nueva a.button") ||
+  document.querySelector(".register-main p a");
+
+const rectToJson = (r) => ({
+  left: r.left,
+  top: r.top,
+  width: r.width,
+  height: r.height,
+});
+
+const animateMorph = (el, rect) => {
+  if (!el || !rect) return;
+  el.style.opacity = "0";
+
+  requestAnimationFrame(() => {
+    const natural = el.getBoundingClientRect();
+    const dx = rect.left - natural.left;
+    const dy = rect.top - natural.top;
+
+    el.style.transform = `translate(${dx}px, ${dy}px)`;
+    el.style.transition = "none";
+
+    requestAnimationFrame(() => {
+      el.style.transition =
+        "transform 400ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease";
+      el.style.opacity = "1";
+      el.style.transform = "";
+    });
+  });
+};
+
+window.addEventListener("pageswap", (e) => {
+  if (e.viewTransition && window.__skipNativeVT) {
+    e.viewTransition.skipTransition();
+  }
+});
+
+let stored = null;
+try {
+  stored = sessionStorage.getItem("morph");
+  sessionStorage.removeItem("morph");
+} catch {}
+
+if (stored) {
+  const pos = JSON.parse(stored);
+  animateMorph(card, pos.card);
+  animateMorph(h1, pos.h1);
+}
+
+if (trigger) {
+  trigger.addEventListener("click", (e) => {
+    e.preventDefault();
+    try {
+      sessionStorage.setItem(
+        "morph",
+        JSON.stringify({
+          card: rectToJson(card.getBoundingClientRect()),
+          h1: rectToJson(h1.getBoundingClientRect()),
+        }),
+      );
+    } catch {}
+
+    window.__skipNativeVT = true;
+    window.location.href = trigger.href;
+  });
+}
+
+window.addEventListener("pageshow", (e) => {
+  if (e.persisted) {
+    [card, h1].forEach((el) => {
+      el.style.transform = "";
+      el.style.opacity = "";
+      el.style.transition = "";
+    });
+  }
+});
+```
+
+La página de destino debe tener `@view-transition { navigation: auto; }` (ya incluido en `styles-login.css` y `styles-registro.css`) para los View Transitions del navegador.
+
+**Nota:** Se carga en `login.html` y `registro.html`, después de `login.js`:
+
+```html
+<script src="../js/auth.js"></script>
+<script src="../js/login.js"></script>
+<script src="../js/transitions.js"></script>
+```
+
+**Commit:**
+```bash
+git add src/js/transitions.js src/css/styles-login.css src/css/styles-registro.css
+git commit -m "feat: implement login and registration page transitions with animations"
+```
+
+## 5.11. Fase 11: Pulido y pruebas
 
 **Paso 1:** Probar cada página en el navegador
 
@@ -3367,17 +4450,19 @@ Abre cada archivo HTML en tu navegador (doble clic o "Open with Live Server" en 
 - `src/pages/index.html`
 
 **Paso 2:** Verificar
-- [ ] Página principal (login.html) muestra formulario de login y video embebido
+- [ ] Página principal (login.html) muestra formulario de login y portada
 - [ ] Login redirige a index.html con credenciales válidas
 - [ ] Login muestra error con credenciales incorrectas
 - [ ] Registro crea cuenta y redirige a login.html
+- [ ] El usuario registrado puede iniciar sesión después de recargar la página (se guarda en localStorage)
 - [ ] Registro muestra error si el email ya existe
 - [ ] index.html redirige a login.html si no hay sesión
 - [ ] Cerrar sesión limpia la sesión y redirige a login.html
-- [ ] Productos se agregan y muestran en tarjetas
-- [ ] Productos se editan (clic en "Editar", cambia el formulario)
+- [ ] Las pestañas "Registrar Producto" / "Ver Productos" cambian de vista
+- [ ] Productos se agregan y muestran como filas en la tabla horizontal
+- [ ] El botón "Agregar Producto" limpia el form y muestra la vista de registro
+- [ ] Productos se editan (clic en "Editar" lleva al formulario con los datos)
 - [ ] Productos se eliminan (con confirmación)
-- [ ] Video de YouTube se reproduce en login.html
 - [ ] CSS se aplica correctamente (colores, márgenes, bordes)
 - [ ] Responsive funciona en celular (abre DevTools y simula un celular)
 
@@ -3385,9 +4470,6 @@ Abre cada archivo HTML en tu navegador (doble clic o "Open with Live Server" en 
 ```bash
 git push origin main
 ```
-
----
-
 # 6. Errores Comunes y Soluciones
 
 ## 6.1. "Cannot read property of undefined"
@@ -3441,7 +4523,7 @@ formulario.addEventListener("submit", function(event) {
 **Solución:**
 ```html
 <!-- Verificar la ruta. Si login.html está en src/pages/ y CSS en src/css/ -->
-<link rel="stylesheet" href="../css/styles.css">
+<link rel="stylesheet" href="../css/styles-login.css">
 <!--          ../ = sube un nivel de carpeta          -->
 ```
 

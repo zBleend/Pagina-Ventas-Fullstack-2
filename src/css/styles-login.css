@@ -253,10 +253,6 @@ form button:active {
   text-shadow: var(--glow-purple);
 }
 
-.productos-login {
-  display: none;
-}
-
 .error-message {
   color: #f87171;
   font-size: 12px;

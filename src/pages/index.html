@@ -1,30 +1,195 @@
 <!doctype html>
 <html lang="es">
-  <!-- loading="lazy" dentro de img-->
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="../css/styles.css" />
-    <title>Sistema de tienda</title>
+    <title>Yorozu 万 / よろず - Panel de Productos</title>
   </head>
   <body>
     <header>
-      <h1>Sistema de tienda y registro de productos</h1>
-      <nav class="menu-derecha">
-        <a href="login.html">Cerrar sesion</a>
+      <h1>Yorozu 万 / よろず - Registro de productos</h1>
+      <nav>
+        <ul>
+          <li><a href="index.html">PRODUCTOS</a></li>
+          <li><a href="#" id="cerrar-sesion">CERRAR SESIÓN</a></li>
+        </ul>
       </nav>
     </header>
+
     <main>
-      <section>
-        <h2>Productos</h2>
+      <nav class="vistas-nav" aria-label="Secciones del panel">
+        <button
+          type="button"
+          class="tab-btn activa"
+          data-vista="registro"
+          aria-selected="true"
+        >
+          Registrar Producto
+        </button>
+        <button
+          type="button"
+          class="tab-btn"
+          data-vista="lista"
+          aria-selected="false"
+        >
+          Ver Productos
+        </button>
+      </nav>
+
+      <section
+        id="vista-registro"
+        class="vista activa"
+        aria-labelledby="registro-producto-title"
+      >
+        <h2 id="registro-producto-title">Registrar Producto</h2>
         <article>
-          <!-- Producto 1 -->
+          <form id="productoForm" novalidate>
+            <label for="prodId">ID</label>
+            <input
+              type="number"
+              id="prodId"
+              name="prodId"
+              min="1"
+              placeholder="1"
+              required
+            />
+            <span
+              id="error-prodId"
+              class="error-message"
+              aria-live="polite"
+            ></span>
+
+            <label for="prodNombre">Nombre</label>
+            <input
+              type="text"
+              id="prodNombre"
+              name="prodNombre"
+              placeholder="Ej: Laptop HP"
+              autocomplete="off"
+              required
+            />
+            <span
+              id="error-prodNombre"
+              class="error-message"
+              aria-live="polite"
+            ></span>
+
+            <label for="prodDescripcion">Descripción</label>
+            <textarea
+              id="prodDescripcion"
+              name="prodDescripcion"
+              rows="3"
+              placeholder="Describe el producto..."
+              required
+            ></textarea>
+            <span
+              id="error-prodDescripcion"
+              class="error-message"
+              aria-live="polite"
+            ></span>
+
+            <label for="prodPrecio">Precio</label>
+            <input
+              type="number"
+              id="prodPrecio"
+              name="prodPrecio"
+              min="0"
+              step="0.01"
+              placeholder="19999"
+              required
+            />
+            <span
+              id="error-prodPrecio"
+              class="error-message"
+              aria-live="polite"
+            ></span>
+
+            <label for="prodCategoria">Categoría</label>
+            <select id="prodCategoria" name="prodCategoria" required>
+              <option value="">-- Selecciona una categoría --</option>
+              <option value="electronica">Electrónica</option>
+              <option value="ropa">Ropa</option>
+              <option value="alimentos">Alimentos</option>
+              <option value="otros">Otros</option>
+            </select>
+            <span
+              id="error-prodCategoria"
+              class="error-message"
+              aria-live="polite"
+            ></span>
+
+            <label for="prodStock">Stock</label>
+            <input
+              type="number"
+              id="prodStock"
+              name="prodStock"
+              min="0"
+              placeholder="10"
+              required
+            />
+            <span
+              id="error-prodStock"
+              class="error-message"
+              aria-live="polite"
+            ></span>
+
+            <label for="prodImagen">URL de la Imagen</label>
+            <input
+              type="url"
+              id="prodImagen"
+              name="prodImagen"
+              placeholder="https://ejemplo.com/imagen.jpg"
+              required
+            />
+            <span
+              id="error-prodImagen"
+              class="error-message"
+              aria-live="polite"
+            ></span>
+
+            <button type="submit" id="btnRegistrar">Registrar Producto</button>
+          </form>
         </article>
-        <article>
-          <!-- Producto 2 -->
+      </section>
+
+      <section
+        id="vista-lista"
+        class="vista"
+        aria-labelledby="productos-title"
+      >
+        <div class="lista-cabecera">
+          <h2 id="productos-title">Productos Registrados</h2>
+          <button type="button" id="btn-nuevo-producto">
+            Agregar Producto
+          </button>
+        </div>
+        <article class="tabla-contenedor">
+          <table aria-label="Lista de productos registrados">
+            <thead>
+              <tr>
+                <th scope="col">Imagen</th>
+                <th scope="col">Nombre</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Precio</th>
+                <th scope="col">Categoría</th>
+                <th scope="col">Stock</th>
+                <th scope="col">Acciones</th>
+              </tr>
+            </thead>
+            <tbody id="contenedorProductos">
+              <!-- JavaScript genera las filas de productos aquí -->
+            </tbody>
+          </table>
         </article>
       </section>
     </main>
-    <footer>Pagina para evaluacion Fullstack 2 || Registro de Productos</footer>
+
+    <footer>
+      <p>&copy; Registro de productos - Evaluación Fullstack II</p>
+    </footer>
+
+    <script src="../js/auth.js"></script>
+    <script src="../js/app.js"></script>
   </body>
 </html>
