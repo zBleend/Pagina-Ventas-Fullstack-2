@@ -13,7 +13,7 @@ En muchas aplicaciones web, el acceso a funcionalidades principales debe estar r
 ```
 login.html (página principal)
   ├── [Formulario Login]      → valida credenciales → index.html
-  ├── [Imagen de portada]     → presentación visual de la tienda
+  ├── [Video de muestra]      → presentación visual de la tienda (logo portada)
   └── [Enlace Registro]       → registro.html → crea cuenta → login.html → index.html
 
 registro.html (creación de cuenta)
@@ -29,7 +29,7 @@ index.html (panel de productos - protegido)
 ```
 src/
 ├── pages/
-│   ├── login.html            ← Página principal (login + portada)
+│   ├── login.html            ← Página principal (login + video de muestra)
 │   ├── registro.html         ← Formulario de registro de usuario
 │   └── index.html            ← Panel de gestión de productos (protegido)
 ├── css/
@@ -42,8 +42,10 @@ src/
 │   ├── app.js                ← CRUD de productos y verificación de sesión
 │   └── transitions.js        ← Animaciones de transición entre páginas
 └── assets/
-    └── images/
-        └── portada.png       ← Imagen de portada de la tienda
+    ├── images/
+    │   └── portada.png       ← Logo/portada de la tienda
+    └── video/
+        └── muestra-productos.mp4 ← Video de muestra (carrusel de fotos)
 ```
 
 ## Tecnologías
@@ -52,7 +54,7 @@ src/
 - CSS3
 - JavaScript (vanilla)
 - sessionStorage (para manejo de sesión)
-- localStorage (para persistir usuarios registrados)
+- localStorage (para persistir usuarios y productos)
 - View Transitions API (animaciones entre login y registro)
 
 ## Usuarios Predefinidos

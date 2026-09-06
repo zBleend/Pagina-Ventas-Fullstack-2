@@ -134,16 +134,41 @@
               aria-live="polite"
             ></span>
 
+            <fieldset class="imagen-opciones">
+              <legend>Imagen del producto</legend>
+              <label>
+                <input type="radio" name="tipoImagen" value="url" checked />
+                Usar URL
+              </label>
+              <label>
+                <input type="radio" name="tipoImagen" value="archivo" />
+                Subir archivo
+              </label>
+            </fieldset>
+
             <label for="prodImagen">URL de la Imagen</label>
             <input
               type="url"
               id="prodImagen"
               name="prodImagen"
               placeholder="https://ejemplo.com/imagen.jpg"
-              required
             />
             <span
               id="error-prodImagen"
+              class="error-message"
+              aria-live="polite"
+            ></span>
+
+            <label for="prodImagenArchivo" hidden>Seleccionar imagen</label>
+            <input
+              type="file"
+              id="prodImagenArchivo"
+              name="prodImagenArchivo"
+              accept="image/*"
+              hidden
+            />
+            <span
+              id="error-prodImagenArchivo"
               class="error-message"
               aria-live="polite"
             ></span>
@@ -178,9 +203,25 @@
               </tr>
             </thead>
             <tbody id="contenedorProductos">
-              <!-- JavaScript genera las filas de productos aquí -->
             </tbody>
           </table>
+
+          <template id="fila-producto">
+            <tr>
+              <td data-label="Imagen">
+                <img src="" alt="" loading="lazy" />
+              </td>
+              <td data-label="Nombre"></td>
+              <td data-label="Descripción"></td>
+              <td data-label="Precio"></td>
+              <td data-label="Categoría"></td>
+              <td data-label="Stock"></td>
+              <td class="acciones">
+                <button type="button" class="btn-editar">Editar</button>
+                <button type="button" class="btn-eliminar">Eliminar</button>
+              </td>
+            </tr>
+          </template>
         </article>
       </section>
     </main>

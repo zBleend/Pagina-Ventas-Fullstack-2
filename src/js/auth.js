@@ -29,9 +29,6 @@ function guardarUsuarios() {
   } catch {}
 }
 
-// ponytail: contraseñas en texto plano en localStorage, suficiente para la práctica.
-// Para un sistema real usar hash del lado del servidor.
-
 function buscarUsuario(email) {
   return usuarios.find(function (usuario) {
     return usuario.email === email;

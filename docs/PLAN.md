@@ -10,7 +10,7 @@ Evaluación Formativa N° 1 - Desarrollo Fullstack II (DSY1104)
 Pagina-Ventas-Fullstack-2/
 ├── src/
 │   ├── pages/
-│   │   ├── login.html          ← Página principal (login + portada)
+│   │   ├── login.html          ← Página principal (login + video de muestra)
 │   │   ├── registro.html       ← Formulario de registro de usuario
 │   │   └── index.html          ← Panel de productos (protegido)
 │   ├── css/
@@ -23,11 +23,14 @@ Pagina-Ventas-Fullstack-2/
 │   │   ├── app.js              ← CRUD de productos + verificación de sesión
 │   │   └── transitions.js      ← Animaciones de transición entre login/registro
 │   └── assets/
-│       └── images/
-│           └── portada.png     ← Imagen de portada de la tienda
+│       ├── images/
+│       │   └── portada.png     ← Logo/portada de la tienda
+│       └── video/
+│           └── muestra-productos.mp4 ← Video de muestra (carrusel de fotos)
 ├── .gitignore
 ├── README.md
 ├── PLAN.md
+├── EXPLICACION.md
 └── INSTRUCCIONES.md
 ```
 
@@ -37,7 +40,7 @@ Pagina-Ventas-Fullstack-2/
 
 | Archivo | Función |
 |---|---|
-| `login.html` | Página principal con formulario de login, imagen de portada y enlace a registro |
+| `login.html` | Página principal con formulario de login, video de muestra y enlace a registro |
 | `registro.html` | Formulario de registro de usuario (nombre, email, contraseña, confirmar) |
 | `index.html` | Panel protegido: pestañas para registrar/ver productos + listado en tabla horizontal |
 | `styles-login.css` | Estilos del tema dark cyberpunk para la página de login |
@@ -47,10 +50,12 @@ Pagina-Ventas-Fullstack-2/
 | `login.js` | Validación de formularios de login y registro |
 | `app.js` | CRUD de productos (crear, listar, editar, eliminar) + verificación de sesión |
 | `transitions.js` | Animaciones de morfing entre login y registro (View Transitions) |
-| `portada.png` | Imagen de portada usada en login y registro |
+| `portada.png` | Logo/portada de la tienda usado en login y registro |
+| `muestra-productos.mp4` | Video de muestra (autoplay muteado en `.imagen-portada` de login) |
 | `.gitignore` | Excluir archivos del sistema y del evaluador |
 | `README.md` | Descripción del proyecto, problemática y flujo de usuario |
 | `PLAN.md` | Planificación del proyecto |
+| `EXPLICACION.md` | Explicación del proyecto y sus funciones (estilo entrevista) |
 
 ---
 
@@ -80,10 +85,10 @@ Pagina-Ventas-Fullstack-2/
 
 - Estructura semántica: header, main, section, article, footer
 - Título de bienvenida al sistema
-- Imagen de portada (`portada.png`)
+- Imagen de portada → video de muestra (`muestra-productos.mp4`) con logo (`portada.png`)
 - Formulario: email + contraseña + botón "Iniciar sesión"
 - Enlace "¿No tiene cuenta? Regístrese ahora mismo" → registro.html
-- Layout en grid de 2 columnas: portada a la izquierda, tarjeta de login a la derecha
+- Layout en grid de 2 columnas: video de muestra a la izquierda, tarjeta de login a la derecha
 - Footer con copyright
 - Estilos propios en `styles-login.css`
 - Commits efectuados: página de login, estilos y refinamiento (landing, estructura)
@@ -102,9 +107,11 @@ Pagina-Ventas-Fullstack-2/
 
 - Estructura semántica: header, nav, main, section, article, footer
 - Nav con "PRODUCTOS" y "CERRAR SESIÓN"
-- Formulario: ID, nombre, descripción, precio, categoría, stock, imagen URL
+- Formulario: ID, nombre, descripción, precio, categoría, stock e imagen (URL o archivo local)
+- Sección `imagen-opciones` (radios `tipoImagen`) para elegir URL o subir archivo
 - Pestañas `.tab-btn` para alternar entre la vista de registro y la vista de lista
 - Tabla con `<tbody id="contenedorProductos">` donde JS inserta las filas de productos
+- `<template id="fila-producto">` con el HTML de la fila (JS solo lo clona y lo rellena)
 - Footer con copyright
 - Enlace a `styles.css`
 
@@ -118,10 +125,10 @@ Pagina-Ventas-Fullstack-2/
 ### Fase 7: JavaScript - app.js
 
 - Verificar sesión al cargar la página (si no hay sesión → redirigir a login.html)
-- Array en memoria para productos
+- Productos persistidos en `localStorage` (clave `productos`) con siembra inicial de productos demo
 - Función `mostrarVista(vista)` (alternar entre las pestañas del panel)
 - Función `registrarProducto` (validar + agregar/actualizar)
-- Función `renderizarProductos` (generar filas de tabla HTML dinámicas)
+- Función `renderizarProductos` (clonar el `<template>` y rellenar celdas con `textContent`)
 - Función `editarProducto` (cargar datos en formulario)
 - Función `eliminarProducto` (confirmar + borrar)
 - Función `limpiarFormulario` (resetear form y volver a estado "Registrar")
@@ -186,6 +193,8 @@ Pagina-Ventas-Fullstack-2/
 | `src/js/app.js` | Crear |
 | `src/js/transitions.js` | Crear |
 | `src/assets/images/portada.png` | Crear |
+| `src/assets/video/muestra-productos.mp4` | Crear |
+| `EXPLICACION.md` | Crear |
 
 ---
 
@@ -201,7 +210,7 @@ Pagina-Ventas-Fullstack-2/
 También contiene:
 - Título de bienvenida
 - Enlace "¿No tiene cuenta? Regístrese ahora mismo" → registro.html
-- Grid de 2 columnas con la portada junto al formulario
+- Grid de 2 columnas con el video de muestra junto al formulario
 
 ### registro.html
 
@@ -222,7 +231,7 @@ También contiene:
 | Precio | `input[type="number"]` | `required`, `min="0"`, `step="0.01"` |
 | Categoría | `select` | `required` → Electrónica, Ropa, Alimentos, Otros |
 | Stock | `input[type="number"]` | `required`, `min="0"` |
-| Imagen URL | `input[type="url"]` | `required`, `placeholder="https://..."` |
+| Imagen | `input[type="url"]` + `input[type="file"]` | Radios `tipoImagen` (URL / archivo); file con `accept="image/*"` |
 | Botones | `button[type="submit"]` | Texto: "Registrar Producto" / "Actualizar Producto" |
 
 ---
@@ -251,7 +260,7 @@ También contiene:
 - Todos los campos obligatorios deben estar completos
 - Precio y stock deben ser números positivos
 - ID debe ser mayor a 0 y no estar duplicado
-- Imagen URL debe ser válida
+- Imagen requerida (URL válida o archivo seleccionado)
 - Verificar sesión al cargar página → redirigir a login.html si no hay sesión
 
 ---
@@ -262,7 +271,7 @@ También contiene:
 - Usar `autocomplete` en cada input
 - Usar `<span class="error-message">` para mensajes de error
 - Usar `loading="lazy"` en imágenes de productos
-- `login.html` debe tener enlace a registro.html e imagen de portada
+- `login.html` debe tener enlace a registro.html, video de muestra y logo portada
 
 ---
 
@@ -303,6 +312,6 @@ También contiene:
   precio: Number,
   categoria: String,
   stock: Number,
-  imagen: String
+  imagen: String (URL http o data URL base64 de un archivo local)
 }
 ```

@@ -1,4 +1,4 @@
-# Guía Completa: Creando un Sistema de Gestión de Productos con Autenticación
+﻿# Guía Completa: Creando un Sistema de Gestión de Productos con Autenticación
 
 **Evaluación Formativa N° 1 - Desarrollo Fullstack II (DSY1104)**
 
@@ -28,12 +28,12 @@ El sistema tendrá 3 páginas:
 
 | Página | Qué hace |
 |---|---|
-| `login.html` | Página principal con formulario de login, imagen de portada y enlace a registro |
+| `login.html` | Página principal con formulario de login, video de muestra y enlace a registro |
 | `registro.html` | Crear una cuenta nueva |
 | `index.html` | Panel de gestión de productos (protegido) |
 
 **Lo que podrás hacer al finalizar:**
-- Ver la página principal con formulario de login, imagen de portada y enlace a registro
+- Ver la página principal con formulario de login, video de muestra y enlace a registro
 - Iniciar sesión con usuarios predefinidos
 - Crear cuentas nuevas
 - Acceder al panel de productos solo si estás autenticado
@@ -62,7 +62,7 @@ El sistema tendrá 3 páginas:
 Pagina-Ventas-Fullstack-2/
 ├── src/
 │   ├── pages/
-│   │   ├── login.html          ← Página principal (login + portada)
+│   │   ├── login.html          ← Página principal (login + video de muestra)
 │   │   ├── registro.html       ← Registro de usuario
 │   │   └── index.html          ← Gestión de productos (protegido)
 │   ├── css/
@@ -75,11 +75,14 @@ Pagina-Ventas-Fullstack-2/
 │   │   ├── app.js              ← Lógica de productos y verificación de sesión
 │   │   └── transitions.js      ← Animaciones entre login y registro
 │   └── assets/
-│       └── images/
-│           └── portada.png     ← Imagen de portada de la tienda
+│       ├── images/
+│       │   └── portada.png     ← Logo/portada de la tienda
+│       └── video/
+│           └── muestra-productos.mp4 ← Video de muestra (carrusel de fotos)
 ├── .gitignore
 ├── README.md
 ├── PLAN.md
+├── EXPLICACION.md
 └── INSTRUCCIONES.md
 ```
 
@@ -101,7 +104,7 @@ Si vienes de Java o Python, estos son los paralelos que necesitas conocer:
 | Clase con métodos | Objeto del DOM con propiedades y métodos |
 | Spring Boot templates (Thymeleaf, JSP) | HTML estático + JavaScript dinámico |
 | Modelo de datos (POJO) | Objeto JavaScript plain `{propiedad: valor}` |
-| Base de datos | Array en memoria (o localStorage) |
+| Base de datos | localStorage (usuarios y productos) |
 | Endpoint REST | No existe - todo está en el navegador |
 | Consola del servidor | Consola del navegador (F12) |
 | Compilar y ejecutar | Abrir el archivo `.html` en el navegador |
@@ -122,7 +125,7 @@ Si vienes de Java o Python, estos son los paralelos que necesitas conocer:
 5. TODO corre en el navegador del usuario
 
 **No hay servidor. No hay base de datos. No hay endpoints.**
-El "estado" se pierde al recargar la página (por eso usamos arrays en memoria).
+El "estado" se guarda en `localStorage` (claves `usuariosRegistrados` y `productos`), así que persiste al recargar la página.
 
 ---
 
@@ -137,7 +140,6 @@ El "estado" se pierde al recargar la página (por eso usamos arrays en memoria).
 **Ejemplo simple:**
 
 ```html
-<!-- Esto es un comentario en HTML. El navegador NO lo muestra. -->
 <h1>Mi Tienda</h1>
 <p>Vendemos productos increíbles.</p>
 ```
@@ -151,32 +153,16 @@ El "estado" se pierde al recargar la página (por eso usamos arrays en memoria).
 **Toda página HTML** tiene esta estructura mínima. Es como el "esqueleto" que siempre necesitas:
 
 ```html
-<!-- 1. Indica al navegador que esto es HTML5 -->
 <!DOCTYPE html>
-
-<!-- 2. Abre el documento HTML. lang="es" dice que el contenido es en español -->
 <html lang="es">
-
-  <!-- 3. <head> es la información que NO se ve en pantalla -->
   <head>
-    <!-- Define la codificación de caracteres (permite tildes y ñ) -->
     <meta charset="UTF-8" />
-
-    <!-- Hace que la página se vea bien en celulares -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
-    <!-- Conecta el archivo CSS (los estilos) -->
     <link rel="stylesheet" href="../css/styles.css" />
-
-    <!-- El título que aparece en la pestaña del navegador -->
     <title>Mi Tienda</title>
   </head>
-
-  <!-- 4. <body> es TODO lo que se ve en la pantalla -->
   <body>
-    <!-- Aquí va el contenido visible: títulos, formularios, imágenes... -->
   </body>
-
 </html>
 ```
 
@@ -202,7 +188,6 @@ HTML5 nos da etiquetas que **describen qué contienen**. En lugar de usar solo `
 ### `<header>` - La puerta principal
 
 ```html
-<!-- El header es la parte superior de la página: logo, título, navegación -->
 <header>
   <h1>Mi Tienda Online</h1>
 </header>
@@ -213,7 +198,6 @@ HTML5 nos da etiquetas que **describen qué contienen**. En lugar de usar solo `
 ### `<nav>` - El mapa de navegación
 
 ```html
-<!-- El nav contiene los enlaces para moverse entre páginas -->
 <nav>
   <ul>
     <li><a href="login.html">INICIO</a></li>
@@ -233,10 +217,7 @@ HTML5 nos da etiquetas que **describen qué contienen**. En lugar de usar solo `
 ### `<main>` - El contenido principal
 
 ```html
-<!-- El main envuelve TODO el contenido principal de la página -->
-<!-- Solo debe haber UNO por página -->
 <main>
-  <!-- Aquí van las secciones con el contenido real -->
 </main>
 ```
 
@@ -245,15 +226,11 @@ HTML5 nos da etiquetas que **describen qué contienen**. En lugar de usar solo `
 ### `<section>` - Las habitaciones
 
 ```html
-<!-- Una sección agrupa contenido relacionado -->
 <section>
   <h2>Registrar Producto</h2>
-  <!-- Aquí va el formulario de registro -->
 </section>
-
 <section>
   <h2>Productos Disponibles</h2>
-  <!-- Aquí va la lista de productos -->
 </section>
 ```
 
@@ -262,7 +239,6 @@ HTML5 nos da etiquetas que **describen qué contienen**. En lugar de usar solo `
 ### `<article>` - Los muebles dentro de cada habitación
 
 ```html
-<!-- Un article es contenido independiente que puede ser reutilizable -->
 <article>
   <h3>Laptop HP</h3>
   <p>Precio: $599.990</p>
@@ -275,7 +251,6 @@ HTML5 nos da etiquetas que **describen qué contienen**. En lugar de usar solo `
 ### `<footer>` - La firma del arquitecto
 
 ```html
-<!-- El footer es el pie de página: copyright, información de contacto -->
 <footer>
   <p>&copy; 2026 Mi Tienda - Evaluación Fullstack II</p>
 </footer>
@@ -317,10 +292,7 @@ Los formularios son la parte más importante de nuestro proyecto. Son donde el u
 ### `<form>` - El contenedor del formulario
 
 ```html
-<!-- action="#" indica a dónde se envían los datos (usaremos JS para manejarlo) -->
-<!-- method="POST" es el método de envío (para enviar datos al servidor) -->
 <form id="loginForm" action="#" method="POST">
-  <!-- Aquí van todos los campos del formulario -->
 </form>
 ```
 
@@ -329,8 +301,6 @@ Los formularios son la parte más importante de nuestro proyecto. Son donde el u
 ### `<label>` - Las etiquetas descriptivas
 
 ```html
-<!-- El atributo "for" conecta la etiqueta con el input -->
-<!-- for="email" significa "esta etiqueta es para el campo con id="email"" -->
 <label for="email">Correo Electrónico</label>
 <input type="email" id="email" name="email">
 ```
@@ -348,9 +318,6 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 
 ```html
 <label for="nombre">Nombre del Producto</label>
-<!-- type="text" acepta cualquier texto -->
-<!-- required significa que el campo es obligatorio -->
-<!-- placeholder muestra un texto de ejemplo dentro del campo -->
 <input
   type="text"
   id="nombre"
@@ -364,8 +331,6 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 
 ```html
 <label for="email">Correo Electrónico</label>
-<!-- type="email" VALIDA automáticamente que tenga formato de email -->
-<!-- Si el usuario escribe "juan" sin @, el navegador muestra error -->
 <input
   type="email"
   id="email"
@@ -382,7 +347,6 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 
 ```html
 <label for="contrasena">Contraseña</label>
-<!-- type="password" oculta los caracteres con puntos o asteriscos -->
 <input
   type="password"
   id="contrasena"
@@ -399,9 +363,6 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 
 ```html
 <label for="precio">Precio</label>
-<!-- type="number" solo acepta números -->
-<!-- min="0" significa que el mínimo es 0 (no se pueden poner precios negativos) -->
-<!-- step="0.01" permite decimales (como 1999.50) -->
 <input
   type="number"
   id="precio"
@@ -417,7 +378,6 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 
 ```html
 <label for="imagen">URL de la Imagen</label>
-<!-- type="url" VALIDA que empiece con http:// o https:// -->
 <input
   type="url"
   id="imagen"
@@ -430,8 +390,6 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 #### type="submit" - Botón de envío
 
 ```html
-<!-- type="submit" envía el formulario cuando se hace clic -->
-<!-- El texto dentro del botón es lo que se muestra -->
 <button type="submit">Iniciar Sesión</button>
 ```
 
@@ -439,8 +397,6 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 
 ```html
 <label for="descripcion">Descripción</label>
-<!-- textarea es para textos largos (varias líneas) -->
-<!-- rows="4" significa que el campo tiene 4 filas de alto -->
 <textarea
   id="descripcion"
   name="descripcion"
@@ -454,10 +410,7 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 
 ```html
 <label for="categoria">Categoría</label>
-<!-- select crea un menú desplegable -->
 <select id="categoria" name="categoria" required>
-  <!-- option es cada opción del menú -->
-  <!-- value es el valor que se envía (el texto es lo que ve el usuario) -->
   <option value="">-- Selecciona una categoría --</option>
   <option value="electronica">Electrónica</option>
   <option value="ropa">Ropa</option>
@@ -487,9 +440,6 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 ### `<img>` - Insertar imágenes
 
 ```html
-<!-- src es la ruta de la imagen (puede ser URL o archivo local) -->
-<!-- alt es una descripción para personas con discapacidad visual -->
-<!-- loading="lazy" carga la imagen solo cuando el usuario hace scroll hasta ella -->
 <img
   src="https://ejemplo.com/laptop.jpg"
   alt="Laptop HP de 15 pulgadas con teclado retroiluminado"
@@ -505,11 +455,6 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 ### `<iframe>` - Videos de YouTube
 
 ```html
-<!-- iframe incrusta contenido de otro sitio (como YouTube) -->
-<!-- width="100%" significa que ocupa todo el ancho disponible -->
-<!-- height="400" es la altura en píxeles -->
-<!-- frameborder="0" elimina el borde del video -->
-<!-- allowfullscreen permite poner el video en pantalla completa -->
 <iframe
   width="100%"
   height="400"
@@ -532,14 +477,11 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 ### Listas con `<ul>` y `<li>`
 
 ```html
-<!-- ul = Unordered List (lista con viñetas/puntos) -->
 <ul>
-  <li>Primer elemento</li>    <!-- li = List Item -->
+  <li>Primer elemento</li>
   <li>Segundo elemento</li>
   <li>Tercer elemento</li>
 </ul>
-
-<!-- ol = Ordered List (lista numerada) -->
 <ol>
   <li>Primer paso</li>
   <li>Segundo paso</li>
@@ -550,9 +492,6 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 ### Hipervínculos con `<a>`
 
 ```html
-<!-- a = Anchor (ancla) -->
-<!-- href = HyperReference (a dónde lleva el enlace) -->
-<!-- target="_blank" abre el enlace en una nueva pestaña -->
 <a href="index.html">Ir al inicio</a>
 <a href="https://google.com" target="_blank">Buscar en Google</a>
 ```
@@ -569,7 +508,6 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 ### Indentación consistente
 
 ```html
-<!-- BIEN: Cada nivel de anidación se indenta con 2 espacios -->
 <html>
   <head>
     <title>Mi Página</title>
@@ -580,36 +518,26 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
     </header>
   </body>
 </html>
-
-<!-- MAL: Todo pegado, sin espacios -->
 <html><head><title>Mi Página</title></head><body><header><h1>Título</h1></header></body></html>
 ```
 
 ### Comentarios útiles
 
 ```html
-<!-- El formulario de login -->
 <form id="loginForm">
-  <!-- Campo de email -->
   <label for="email">Email</label>
   <input type="email" id="email">
 </form>
-
-<!-- Productos dinámicos generados por JavaScript -->
 <div id="contenedorProductos">
-  <!-- JS inserta las tarjetas aquí -->
 </div>
 ```
 
 ### Cerrar todas las etiquetas
 
 ```html
-<!-- BIEN: Todas las etiquetas están cerradas -->
 <p>Texto</p>
 <img src="foto.jpg" alt="Foto">
 <br>
-
-<!-- MAL: Etiqueta sin cerrar -->
 <p>Texto
 <img src="foto.jpg" alt="Foto">
 ```
@@ -625,7 +553,7 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 **Paso 3:** Dentro del body, agrega en este orden:
 1. `<header>` con un `<h1>` que diga "Yorozu 万 / よろず"
 2. `<main>` con:
-   - Imagen de portada (`portada.png`)
+   - Video de muestra (`muestra-productos.mp4`) con logo (`portada.png`)
    - Sección con el formulario de login (email + contraseña + botón)
    - Enlace "¿No tiene cuenta? Regístrese ahora mismo" → registro.html
 3. `<footer>` con copyright
@@ -649,11 +577,8 @@ Los inputs son donde el usuario escribe. El atributo `type` define qué tipo de 
 **Ejemplo:**
 
 ```css
-/* Esto es un comentario en CSS. El navegador NO lo muestra. */
-
-/* Selecciona TODOS los elementos <h1> y les pone color azul */
 h1 {
-  color: blue;  /* Propiedad: valor; */
+  color: blue;
 }
 ```
 
@@ -664,7 +589,6 @@ Para que los estilos se apliquen, necesitas "conectar" el CSS con el HTML. Hay 2
 ### Forma 1: Archivo externo (la recomendada)
 
 ```html
-<!-- En el <head> del HTML, agrega esto: -->
 <link rel="stylesheet" href="../css/styles.css">
 ```
 
@@ -676,7 +600,6 @@ Para que los estilos se apliquen, necesitas "conectar" el CSS con el HTML. Hay 2
 ### Forma 2: Dentro del HTML (NO recomendada)
 
 ```html
-<!-- Puedes escribir CSS directamente en el HTML, pero NO lo hagas -->
 <style>
   h1 { color: blue; }
 </style>
@@ -691,24 +614,19 @@ Los selectores son la forma en que CSS "encuentra" los elementos del HTML para e
 ### Selector de elemento
 
 ```css
-/* Selecciona TODOS los <h1> de la página */
 h1 {
-  font-size: 2rem;     /* Tamaño de fuente */
-  color: #333;         /* Color gris oscuro */
+  font-size: 2rem;
+  color: #333;
 }
-
-/* Selecciona TODOS los <p> de la página */
 p {
-  line-height: 1.6;    /* Espacio entre líneas */
-  margin-bottom: 1rem; /* Espacio abajo del párrafo */
+  line-height: 1.6;
+  margin-bottom: 1rem;
 }
 ```
 
 ### Selector de clase (.)
 
 ```css
-/* Selecciona cualquier elemento con class="destacado" */
-/* El punto (.) antes del nombre significa "clase" */
 .destacado {
   background-color: yellow;
   padding: 10px;
@@ -716,7 +634,6 @@ p {
 ```
 
 ```html
-<!-- En el HTML, usas class="destacado" -->
 <p class="destacado">Este párrafo está destacado</p>
 <p>Este párrafo NO está destacado</p>
 ```
@@ -724,19 +641,14 @@ p {
 ### Selector de ID (#)
 
 ```css
-/* Selecciona SOLO el elemento con id="formulario-login" */
-/* El numeral (#) antes del nombre significa "ID" */
 #formulario-login {
   max-width: 400px;
-  margin: 0 auto;  /* Centra el formulario */
+  margin: 0 auto;
 }
 ```
 
 ```html
-<!-- En el HTML, usas id="formulario-login" -->
-<!-- Un ID debe ser ÚNICO. Solo puede existir UNA vez por página -->
 <form id="formulario-login">
-  <!-- campos -->
 </form>
 ```
 
@@ -747,8 +659,6 @@ p {
 ### Selector descendente
 
 ```css
-/* Selecciona los <article> que están DENTRO de un <section> */
-/* No afecta los <article> que estén fuera de <section> */
 section article {
   border: 1px solid #ccc;
   padding: 20px;
@@ -772,26 +682,21 @@ section article {
 ### Colores
 
 ```css
-/* Color del texto */
 h1 {
-  color: #333333;        /* Hexadecimal: #RRGGBB */
-  color: rgb(51, 51, 51); /* RGB: rojo, verde, azul (0-255) */
-  color: red;             /* Nombre del color */
+  color: #333333;
+  color: rgb(51, 51, 51);
+  color: red;
 }
-
-/* Color de fondo */
 body {
-  background-color: #f5f5f5;  /* Gris muy claro */
+  background-color: #f5f5f5;
 }
-
-/* Paleta de colores recomendada */
 :root {
-  --color-primario: #2563eb;   /* Azul principal */
-  --color-secundario: #1e40af; /* Azul oscuro */
-  --color-exito: #16a34a;      /* Verde (éxito) */
-  --color-error: #dc2626;      /* Rojo (error) */
-  --color-texto: #1f2937;      /* Gris oscuro para texto */
-  --color-fondo: #f9fafb;      /* Gris muy claro de fondo */
+  --color-primario: #2563eb;
+  --color-secundario: #1e40af;
+  --color-exito: #16a34a;
+  --color-error: #dc2626;
+  --color-texto: #1f2937;
+  --color-fondo: #f9fafb;
 }
 ```
 
@@ -799,46 +704,28 @@ body {
 
 ```css
 body {
-  /* font-family: Define qué fuente usar */
-  /* El navegador intenta la primera; si no la tiene, usa la segunda, etc. */
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-
-  /* font-size: Tamaño de la fuente */
-  /* 1rem = tamaño base del navegador (generalmente 16px) */
   font-size: 1rem;
-
-  /* font-weight: Grosor del texto */
-  /* normal = 400, bold = 700 */
   font-weight: normal;
 }
-
 h1 {
-  font-size: 2rem;     /* 2 veces el tamaño base */
-  font-weight: bold;   /* Texto en negrita */
+  font-size: 2rem;
+  font-weight: bold;
 }
-
 p {
-  font-size: 1rem;     /* Tamaño base */
-  line-height: 1.6;    /* Espacio entre líneas (1.6 es legible) */
+  font-size: 1rem;
+  line-height: 1.6;
 }
 ```
 
 ### Espaciado
 
 ```css
-/* margin: Espacio FUERA del elemento (hacia afuera) */
-/* padding: Espacio DENTRO del elemento (hacia adentro) */
-
 .card {
-  /* Todos los lados */
-  margin: 20px;         /* 20px por todos los lados por fuera */
-  padding: 15px;        /* 15px por todos los lados por dentro */
-
-  /* Lados individuales: top right bottom left (en sentido horario) */
-  margin: 10px 20px 10px 20px;  /* arriba 10, derecha 20, abajo 10, izquierda 20 */
-
-  /* Abreviado: arriba/abajo izquierda/derecha */
-  margin: 10px 20px;    /* arriba/abajo 10, izquierda/derecha 20 */
+  margin: 20px;
+  padding: 15px;
+  margin: 10px 20px 10px 20px;
+  margin: 10px 20px;
 }
 ```
 
@@ -850,12 +737,9 @@ p {
 
 ```css
 .card {
-  /* border: grosor estilo color */
-  border: 1px solid #e5e7eb;  /* Borde delgado gris */
-
-  /* border-radius: Esquinas redondeadas */
-  border-radius: 8px;          /* Esquinas suaves */
-  border-radius: 50%;          /* Círculo perfecto */
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  border-radius: 50%;
 }
 ```
 
@@ -863,17 +747,12 @@ p {
 
 ```css
 .card {
-  /* width: Ancho */
-  width: 300px;          /* Ancho fijo de 300 píxeles */
-  width: 100%;           /* Ancho al 100% del contenedor padre */
-  width: 50vw;           /* 50% del ancho de la ventana (viewport width) */
-
-  /* max-width: Ancho máximo (se adapta si hay menos espacio) */
-  max-width: 1200px;     /* Nunca será más ancho que 1200px */
-
-  /* height: Alto */
-  height: auto;          /* Se ajusta al contenido */
-  height: 200px;         /* Alto fijo */
+  width: 300px;
+  width: 100%;
+  width: 50vw;
+  max-width: 1200px;
+  height: auto;
+  height: 200px;
 }
 ```
 
@@ -884,13 +763,10 @@ p {
 **Analogía para backend devs:** Flexbox es como un `LayoutManager` en Java Swing/JavaFX o un `flex container` en CSS de Android. La diferencia: en Java defines el layout en el código, en CSS defines el layout con propiedades.
 
 ```css
-/* Esto es como decir en Java: "usar FlowLayout horizontal" */
 .container {
   display: flex;
   flex-direction: row;
 }
-
-/* Esto es como decir: "usar GridLayout de 3 columnas" */
 .container {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -900,12 +776,9 @@ p {
 ### El concepto básico
 
 ```css
-/* Cuando pones display: flex a un contenedor, sus hijos se vuelven "flex items" */
-/* Por defecto, se organizan en fila (uno al lado del otro) */
-
 .container {
-  display: flex;              /* Activa Flexbox */
-  gap: 20px;                  /* Espacio entre los elementos */
+  display: flex;
+  gap: 20px;
 }
 ```
 
@@ -915,75 +788,67 @@ p {
   <div class="card">Producto 2</div>
   <div class="card">Producto 3</div>
 </div>
-<!-- Los 3 cards se mostrarán EN FILA, uno al lado del otro -->
 ```
 
 ### flex-direction
 
 ```css
-/* flex-direction define la dirección de los elementos */
 .container {
   display: flex;
-  flex-direction: row;         /* Por defecto: fila (izquierda a derecha) */
-  flex-direction: row-reverse; /* Fila invertida (derecha a izquierda) */
-  flex-direction: column;      /* Columna (uno debajo del otro) */
-  flex-direction: column-reverse; /* Columna invertida */
+  flex-direction: row;
+  flex-direction: row-reverse;
+  flex-direction: column;
+  flex-direction: column-reverse;
 }
 ```
 
 ### justify-content
 
 ```css
-/* justify-content distribuye los elementos en el eje PRINCIPAL (horizontal en row) */
 .container {
   display: flex;
-  justify-content: flex-start;    /* Todos pegados a la izquierda */
-  justify-content: flex-end;      /* Todos pegados a la derecha */
-  justify-content: center;        /* Centrados */
-  justify-content: space-between; /* Espacio uniforme entre ellos */
-  justify-content: space-around;  /* Espacio alrededor de cada uno */
-  justify-content: space-evenly;  /* Espacio exactamente igual */
+  justify-content: flex-start;
+  justify-content: flex-end;
+  justify-content: center;
+  justify-content: space-between;
+  justify-content: space-around;
+  justify-content: space-evenly;
 }
 ```
 
 ### align-items
 
 ```css
-/* align-items distribuye los elementos en el eje TRANSVERSAL (vertical en row) */
 .container {
   display: flex;
-  align-items: stretch;      /* Todos se estiran para tener la misma altura */
-  align-items: flex-start;   /* Todos alineados arriba */
-  align-items: flex-end;     /* Todos alineados abajo */
-  align-items: center;       /* Todos centrados verticalmente */
+  align-items: stretch;
+  align-items: flex-start;
+  align-items: flex-end;
+  align-items: center;
 }
 ```
 
 ### flex-wrap
 
 ```css
-/* Si los elementos no caben en una fila, ¿qué pasa? */
 .container {
   display: flex;
-  flex-wrap: nowrap;   /* Por defecto: NO saltan línea. Se encogen. */
-  flex-wrap: wrap;     /* Saltan a la siguiente línea si no caben */
+  flex-wrap: nowrap;
+  flex-wrap: wrap;
 }
 ```
 
 ### Ejemplo práctico: Cuadrícula de productos
 
 ```css
-/* Contenedor de productos: cuadrícula responsive */
 .contenedor-productos {
   display: flex;
-  flex-wrap: wrap;           /* Los cards saltan de línea si no caben */
-  gap: 20px;                 /* Espacio entre cards */
-  justify-content: center;   /* Centra los cards horizontalmente */
+  flex-wrap: wrap;
+  gap: 20px;
+  justify-content: center;
 }
-
-/* Cada tarjeta de producto */
 .producto-card {
-  width: 280px;              /* Ancho fijo del card */
+  width: 280px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   padding: 16px;
@@ -1007,21 +872,15 @@ p {
 ### @media queries
 
 ```css
-/* Por defecto, los estilos son para escritorio */
-
-/* Cuando la pantalla sea menor a 768px (tablets y celulares) */
 @media (max-width: 768px) {
-  /* Cambia el layout a columna */
   .contenedor-productos {
     flex-direction: column;
     align-items: center;
   }
 }
-
-/* Cuando la pantalla sea menor a 480px (celulares pequeños) */
 @media (max-width: 480px) {
   h1 {
-    font-size: 1.5rem;  /* Reduce el tamaño del título */
+    font-size: 1.5rem;
   }
 }
 ```
@@ -1043,24 +902,19 @@ p {
 **Mobile-first** significa: escribe los estilos para celular PRIMERO, luego usa `@media (min-width: ...)` para agregar estilos de escritorio.
 
 ```css
-/* ESTILOS PARA CELULAR (base) */
 .card {
-  width: 100%;             /* Ocupa todo el ancho en celular */
+  width: 100%;
   padding: 10px;
 }
-
-/* CUANDO LA PANTALLA SEA MAYOR A 768px (tablet+) */
 @media (min-width: 768px) {
   .card {
-    width: 45%;            /* Ocupa la mitad del ancho */
+    width: 45%;
     padding: 20px;
   }
 }
-
-/* CUANDO LA PANTALLA SEA MAYOR A 1024px (escritorio) */
 @media (min-width: 1024px) {
   .card {
-    width: 30%;            /* Ocupa un tercio del ancho */
+    width: 30%;
   }
 }
 ```
@@ -1070,7 +924,6 @@ p {
 Las variables te permiten guardar valores y reutilizarlos. Si quieres cambiar un color, lo cambias UNA vez y se actualiza en todas partes.
 
 ```css
-/* Las variables se definen en :root (el nivel más alto) */
 :root {
   --color-primario: #2563eb;
   --color-error: #dc2626;
@@ -1078,18 +931,14 @@ Las variables te permiten guardar valores y reutilizarlos. Si quieres cambiar un
   --radio-borde: 8px;
   --sombra: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
-
-/* Las variables se usan con var(--nombre) */
 button {
   background-color: var(--color-primario);
   border-radius: var(--radio-borde);
 }
-
 .card {
   box-shadow: var(--sombra);
   border-radius: var(--radio-borde);
 }
-
 .mensaje-error {
   color: var(--color-error);
 }
@@ -1098,7 +947,7 @@ button {
 **Ventaja:** Si mañana quieres cambiar el color primario de azul a verde, solo cambias una línea:
 ```css
 :root {
-  --color-primario: #16a34a;  /* De azul a verde */
+  --color-primario: #16a34a;
 }
 ```
 Y TODO el sitio cambia automáticamente.
@@ -1108,28 +957,21 @@ Y TODO el sitio cambia automáticamente.
 ### Transiciones suaves
 
 ```css
-/* transition hace que los cambios de estilo sean suaves, no bruscos */
 button {
   background-color: var(--color-primario);
-  transition: background-color 0.3s ease;  /* Transición de 0.3 segundos */
+  transition: background-color 0.3s ease;
 }
-
-/* Cuando el mouse pasa por encima (hover) */
 button:hover {
-  background-color: var(--color-secundario);  /* Color más oscuro */
+  background-color: var(--color-secundario);
 }
 ```
 
 ### Sombras
 
 ```css
-/* box-shadow: eje-x eje-y desenfoque color */
 .card {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  /*          x   y    blur   color con transparencia */
 }
-
-/* Sombra más pronunciada al pasar el mouse */
 .card:hover {
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
 }
@@ -1140,11 +982,10 @@ button:hover {
 Al inicio de tu CSS, siempre debes "resetear" los estilos por defecto del navegador:
 
 ```css
-/* Reset: Elimina márgenes y paddings por defecto del navegador */
 * {
-  margin: 0;           /* Sin márgenes */
-  padding: 0;          /* Sin paddings */
-  box-sizing: border-box;  /* El padding y border se incluyen en el ancho total */
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 ```
 
@@ -1163,54 +1004,25 @@ Con `border-box`:
 ### Organización por secciones
 
 ```css
-/* ==================== */
-/* RESET Y VARIABLES    */
-/* ==================== */
 * { margin: 0; padding: 0; box-sizing: border-box; }
-
 :root {
   --color-primario: #2563eb;
 }
-
-/* ==================== */
-/* TIPOGRAFÍA           */
-/* ==================== */
 body { font-family: 'Segoe UI', sans-serif; }
 h1 { font-size: 2rem; }
-
-/* ==================== */
-/* LAYOUT               */
-/* ==================== */
 .container { max-width: 1200px; margin: 0 auto; }
-
-/* ==================== */
-/* COMPONENTES          */
-/* ==================== */
 .card { border: 1px solid #e5e7eb; }
 button { background-color: var(--color-primario); }
-
-/* ==================== */
-/* RESPONSIVE           */
-/* ==================== */
 @media (max-width: 768px) { ... }
 ```
 
 ### Otras buenas prácticas
 
 ```css
-/* COMENTARIOS: Explica por qué haces algo, no qué haces */
-/* Este padding extra es para compensar la barra de navegación fija */
 body { padding-top: 60px; }
-
-/* NOMENCLATURA CLARA: Los nombres de clase deben describir qué es */
-.producto-card { }      /* BIEN: describe el componente */
-.rojo { }               /* MAL: describe el color, no la función */
-
-/* EVITAR !important */
-/* MAL: */
+.producto-card { }
+.rojo { }
 p { color: red !important; }
-
-/* BIEN: Usa un selector más específico */
 section p { color: red; }
 ```
 
@@ -1226,7 +1038,7 @@ section p { color: red; }
 1. Reset y variables (`:root`)
 2. Tipografía base (`body.login-page`)
 3. Header
-4. Grid del main: imagen de portada a la izquierda, tarjeta de login a la derecha
+4. Grid del main: video de muestra a la izquierda, tarjeta de login a la derecha
 5. Formulario (inputs, labels, botón)
 6. Mensajes de error
 7. Footer
@@ -1234,7 +1046,7 @@ section p { color: red; }
 
 **Resultado esperado:**
 - La página tiene fondo oscuro (`#0a0e17`)
-- Layout en grid de 2 columnas: imagen de portada con borde cyan y tarjeta con el login
+- Layout en grid de 2 columnas: video de muestra con borde cyan y tarjeta con el login
 - La tarjeta del formulario tiene fondo `#1a2035` y borde sutil
 - Los inputs tienen fondo oscuro, bordes redondeados y al enfocarse el borde se ilumina cyan
 - El botón es cyan con hover con glow
@@ -1259,19 +1071,12 @@ Si vienes de Java o Python, JavaScript tiene particularidades que necesitas cono
 ### 4.0.1. var vs const vs let
 
 ```javascript
-// Java: final String nombre = "Juan";  (const)
-//       String nombre = "Juan";         (variable normal)
-
-// JavaScript: TRES formas de declarar variables
-var nombre = "Juan";    // OBSOLETO. Scope de función. NO USAR.
-let nombre = "Juan";    // Variable normal. Scope de bloque (como Java).
-const nombre = "Juan";  // Constante. No puede cambiar. Scope de bloque.
-
-// Ejemplo práctico
-const PI = 3.14159;     // No cambia nunca
-let contador = 0;       // Puede cambiar
-contador = 1;           // OK
-// PI = 3;              // ERROR: Assignment to constant variable
+var nombre = "Juan";
+let nombre = "Juan";
+const nombre = "Juan";
+const PI = 3.14159;
+let contador = 0;
+contador = 1;
 ```
 
 **Regla simple:** Usa `const` por defecto. Si necesitas cambiar el valor, usa `let`. Nunca uses `var`.
@@ -1279,22 +1084,15 @@ contador = 1;           // OK
 ### 4.0.2. Comparadores: =, ==, ===
 
 ```javascript
-// = es ASIGNACIÓN (igual que en Java/Python)
 let x = 5;
-
-// == es IGUALDAD FLOJA (compara valor, ignora tipo)
-// JavaScript intenta convertir tipos automáticamente
-"5" == 5         // true  (convierte "5" a número)
-"5" == "5"       // true
-null == undefined // true
-0 == false       // true
-
-// === es IGUALDAD ESTRICTA (compara valor Y tipo)
-// Esto es lo que debes usar SIEMPRE
-"5" === 5        // false (string !== number)
-"5" === "5"      // true
-null === undefined // false
-0 === false      // false
+"5" == 5
+"5" == "5"
+null == undefined
+0 == false
+"5" === 5
+"5" === "5"
+null === undefined
+0 === false
 ```
 
 **Regla de oro:** Usa `===` SIEMPRE. El `==` causa bugs difíciles de encontrar.
@@ -1302,92 +1100,64 @@ null === undefined // false
 ### 4.0.3. Truthy y Falsy
 
 ```javascript
-// En Java/Python: solo booleanos son true/false
-// En JavaScript: CUALQUIER valor se convierte a booleano
-
-// Valores FALSYS (se convierten a false):
 false
 0
-""            // string vacío
+""
 null
 undefined
-NaN           // Not a Number
-
-// Todo lo demás es TRUTHY:
-"0"           // true (string no vacío)
-"false"       // true (string no vacío)
-[]            // true (array vacío)
-{}            // true (objeto vacío)
-
-// Útil para validaciones (como en Python: if nombre:)
+NaN
+"0"
+"false"
+[]
+{}
 if (email) {
-  // Se ejecuta si email no es vacío, null, undefined, etc.
 }
 ```
 
 ### 4.0.4. undefined vs null
 
 ```javascript
-// null: "no tiene valor" (explícito, como None en Python)
 let nombre = null;
-
-// undefined: "no se ha definido" (implícito)
 let apellido;
-console.log(apellido);  // undefined
-
-// Diferencia práctica:
-// null = yo sé que está vacío (lo asigné yo)
-// undefined = el navegador no encontró nada
+console.log(apellido);
 ```
 
 ### 4.0.5. Hoisting (Elevar)
 
 ```javascript
-// JavaScript "mueve" las declaraciones al inicio automáticamente
-console.log(x);  // undefined (no da error)
+console.log(x);
 var x = 5;
-
-// Equivale a:
 var x;
-console.log(x);  // undefined
+console.log(x);
 x = 5;
-
-// Con let/const NO pasa (da error si accedes antes de declarar):
-console.log(y);  // ReferenceError
+console.log(y);
 let y = 5;
 ```
 
 ### 4.0.6. Type Coercion (Coerción de tipos)
 
 ```javascript
-// JavaScript convierte tipos automáticamente (peligroso)
-"5" + 3      // "53"  (string + number = concatenación)
-"5" - 3      // 2     (string - number = operación matemática)
-"5" * 2      // 10
-"cinco" - 1  // NaN   (No se puede convertir)
-
-// Por eso usa ===, no ==
-"5" == 5     // true  (convierte "5" a 5)
-"5" === 5    // false (tipos diferentes)
+"5" + 3
+"5" - 3
+"5" * 2
+"cinco" - 1
+"5" == 5
+"5" === 5
 ```
 
 ### 4.0.7. this en JavaScript (muy diferente a Java)
 
 ```javascript
-// En Java: this siempre se refiere a la instancia actual
-// En JavaScript: this depende de CÓMO se llama la función
-
 const persona = {
   nombre: "Juan",
   saludar: function() {
-    console.log(this.nombre);  // "Juan" (función normal)
+    console.log(this.nombre);
   }
 };
-
 const persona2 = {
   nombre: "Ana",
   saludar: () => {
-    console.log(this.nombre);  // undefined (arrow function NO tiene su propio this)
+    console.log(this.nombre);
   }
 };
 ```
@@ -1396,76 +1166,44 @@ const persona2 = {
 
 ```javascript
 let numeros = [1, 2, 3, 4, 5];
-
-// .filter() = Stream.filter()
-let pares = numeros.filter(n => n % 2 === 0);  // [2, 4]
-
-// .map() = Stream.map()
-let duplicados = numeros.map(n => n * 2);  // [2, 4, 6, 8, 10]
-
-// .find() = como buscar en una lista
-let encontrado = numeros.find(n => n > 3);  // 4
-
-// .reduce() = Stream.reduce()
-let suma = numeros.reduce((acc, n) => acc + n, 0);  // 15
-
-// .forEach() = como un for-each
+let pares = numeros.filter(n => n % 2 === 0);
+let duplicados = numeros.map(n => n * 2);
+let encontrado = numeros.find(n => n > 3);
+let suma = numeros.reduce((acc, n) => acc + n, 0);
 numeros.forEach(n => console.log(n));
 ```
 
 ### 4.0.9. Funciones como objetos
 
 ```javascript
-// En JS, las funciones son objetos (como en Python)
 function sumar(a, b) { return a + b; }
-
-// Puedes pasar funciones como parámetros
 function ejecutar(funcion, x, y) {
   return funcion(x, y);
 }
-ejecutar(sumar, 5, 3);  // 8
-
-// Arrow functions son más concisas
+ejecutar(sumar, 5, 3);
 const sumar2 = (a, b) => a + b;
-const cuadrado = n => n * n;  // Un solo parámetro, sin paréntesis
+const cuadrado = n => n * n;
 ```
 
 ### 4.0.10. JSON en JavaScript
 
 ```javascript
-// Java: Gson o Jackson
-// Python: json.dumps() / json.loads()
-// JavaScript: JSON.stringify() / JSON.parse()
-
-// Objeto a JSON string
 let persona = { nombre: "Juan", edad: 30 };
 let json = JSON.stringify(persona);
-// '{"nombre":"Juan","edad":30}'
-
-// JSON string a objeto
 let objeto = JSON.parse('{"nombre":"Juan","edad":30}');
-console.log(objeto.nombre);  // "Juan"
+console.log(objeto.nombre);
 ```
 
 ### 4.0.11. Asincronía: callbacks, Promises, async/await
 
 ```javascript
-// Java: hilos, CompletableFuture
-// Python: asyncio
-// JavaScript: callbacks, Promises, async/await
-
-// Callback (el estilo antiguo)
 setTimeout(function() {
   console.log("Después de 2 segundos");
 }, 2000);
-
-// Promise (similar a CompletableFuture)
 fetch("https://api.ejemplo.com/datos")
   .then(respuesta => respuesta.json())
   .then(datos => console.log(datos))
   .catch(error => console.error(error));
-
-// async/await (más moderno, como Java 11+)
 async function obtenerDatos() {
   try {
     const respuesta = await fetch("https://api.ejemplo.com/datos");
@@ -1480,22 +1218,13 @@ async function obtenerDatos() {
 ### 4.0.12. Eventos (concepto nuevo para backend devs)
 
 ```javascript
-// En Java: listeners, event handlers
-// En JavaScript: addEventListener
-
-// Escuchar un clic
 document.getElementById("boton").addEventListener("click", function() {
   console.log("Hiciste clic");
 });
-
-// Escuchar envío de formulario
 document.getElementById("formulario").addEventListener("submit", function(event) {
-  event.preventDefault();  // Evita que la página se recargue
+  event.preventDefault();
   console.log("Formulario enviado");
 });
-
-// Equivalente en Java:
-// boton.addActionListener(e -> System.out.println("Clic"));
 ```
 
 ---
@@ -1509,9 +1238,6 @@ document.getElementById("formulario").addEventListener("submit", function(event)
 **Ejemplo:**
 
 ```javascript
-// Esto es un comentario en JavaScript. El navegador NO lo ejecuta.
-
-// Cuando el usuario hace clic en el botón, se ejecuta esta función
 document.getElementById("miBoton").addEventListener("click", function() {
   alert("¡Hola! Hiciste clic en el botón");
 });
@@ -1542,14 +1268,14 @@ Cada etiqueta HTML es un **nodo** del DOM. JavaScript puede "ver" y "tocar" cada
 ### La jerarquía del DOM
 
 ```javascript
-window          // La ventana completa del navegador
-  └── document  // El documento HTML completo
-        └── html  // La etiqueta <html>
-              ├── head  // La etiqueta <head>
+window
+  └── document
+        └── html
+              ├── head
               │     ├── meta
               │     ├── title
               │     └── link
-              └── body  // La etiqueta <body>
+              └── body
                     ├── header
                     │     └── h1
                     ├── nav
@@ -1571,10 +1297,7 @@ window          // La ventana completa del navegador
 ## 4.3. Cómo se conecta JS con HTML
 
 ```html
-<!-- Puedes poner JavaScript al final del <body> -->
-<!-- Esto es para que el HTML se cargue PRIMERO y luego el JS lo manipule -->
 <body>
-  <!-- Todo el contenido HTML -->
   <script src="../js/app.js"></script>
 </body>
 ```
@@ -1592,8 +1315,6 @@ JavaScript necesita encontrar los elementos del HTML antes de poder modificarlos
 ```
 
 ```javascript
-// Busca el elemento con id="nombre"
-// Retorna UN solo elemento (porque los IDs son únicos)
 const campoNombre = document.getElementById("nombre");
 ```
 
@@ -1607,12 +1328,9 @@ const campoNombre = document.getElementById("nombre");
 ```
 
 ```javascript
-// Busca el PRIMER elemento que coincida con el selector CSS
-const formulario = document.querySelector("#loginForm");  // Por ID
-const primerInput = document.querySelector("input");      // Primer <input> de la página
-
-// Busca por clase
-const cards = document.querySelector(".producto-card");   // Primer .producto-card
+const formulario = document.querySelector("#loginForm");
+const primerInput = document.querySelector("input");
+const cards = document.querySelector(".producto-card");
 ```
 
 ### querySelectorAll
@@ -1624,13 +1342,9 @@ const cards = document.querySelector(".producto-card");   // Primer .producto-ca
 ```
 
 ```javascript
-// Busca TODOS los elementos que coincidan con el selector
-// Retorna un array (una lista de elementos)
 const todasLasTarjetas = document.querySelectorAll(".producto-card");
-
-// Puedes recorrer el array
 todasLasTarjetas.forEach(function(tarjeta) {
-  console.log(tarjeta);  // Imprime cada tarjeta en la consola
+  console.log(tarjeta);
 });
 ```
 
@@ -1649,21 +1363,13 @@ Los **eventos** son acciones del usuario: clic, escribir, enviar formulario, pas
 ### addEventListener
 
 ```javascript
-// Sintaxis: elemento.addEventListener("evento", función)
-
-// Cuando el usuario haga clic en el botón
 const boton = document.getElementById("miBoton");
 boton.addEventListener("click", function() {
   console.log("Hiciste clic");
 });
-
-// Cuando el usuario envíe el formulario
 const formulario = document.getElementById("loginForm");
 formulario.addEventListener("submit", function(event) {
-  // event.preventDefault() EVITA que el formulario recargue la página
-  // SIN esto, cada vez que envías el formulario, la página se recarga
   event.preventDefault();
-
   console.log("Formulario enviado");
 });
 ```
@@ -1682,15 +1388,10 @@ formulario.addEventListener("submit", function(event) {
 ### event.preventDefault()
 
 ```javascript
-// SIN preventDefault: el formulario recarga la página
 formulario.addEventListener("submit", function() {
-  // El navegador recarga la página automáticamente
 });
-
-// CON preventDefault: el formulario NO recarga la página
 formulario.addEventListener("submit", function(event) {
-  event.preventDefault();  // Evita la recarga
-  // Ahora puedes validar y procesar con JavaScript
+  event.preventDefault();
 });
 ```
 
@@ -1706,17 +1407,10 @@ formulario.addEventListener("submit", function(event) {
 
 ```javascript
 const formulario = document.getElementById("loginForm");
-
 formulario.addEventListener("submit", function(event) {
-  event.preventDefault();  // Evitar recarga
-
-  // Obtener el valor del campo email
+  event.preventDefault();
   const email = document.getElementById("email").value;
-  //                    .value = lo que el usuario escribió
-
-  // Obtener el valor del campo contraseña
   const contrasena = document.getElementById("contrasena").value;
-
   console.log("Email:", email);
   console.log("Contraseña:", contrasena);
 });
@@ -1734,11 +1428,7 @@ formulario.addEventListener("submit", function(event) {
 
 ```javascript
 const titulo = document.getElementById("titulo");
-
-// Cambiar el texto
 titulo.textContent = "Nueva Tienda";
-
-// Cambiar el HTML (puedes incluir etiquetas)
 titulo.innerHTML = "Nueva <em>Tienda</em>";
 ```
 
@@ -1750,13 +1440,8 @@ titulo.innerHTML = "Nueva <em>Tienda</em>";
 ### Crear un elemento nuevo
 
 ```javascript
-// 1. Crear el elemento (está "en el aire", aún no está en la página)
 const nuevoParrafo = document.createElement("p");
-
-// 2. Darle contenido
 nuevoParrafo.textContent = "Este es un párrafo nuevo";
-
-// 3. Agregarlo a la página
 document.body.appendChild(nuevoParrafo);
 ```
 
@@ -1764,11 +1449,7 @@ document.body.appendChild(nuevoParrafo);
 
 ```javascript
 const imagen = document.getElementById("miImagen");
-
-// Cambiar el src de una imagen
 imagen.src = "https://ejemplo.com/nueva-foto.jpg";
-
-// Cambiar el alt
 imagen.alt = "Descripción de la nueva foto";
 ```
 
@@ -1776,17 +1457,9 @@ imagen.alt = "Descripción de la nueva foto";
 
 ```javascript
 const elemento = document.getElementById("miElemento");
-
-// Agregar una clase
 elemento.classList.add("activo");
-
-// Quitar una clase
 elemento.classList.remove("activo");
-
-// Cambiar una clase (si tiene la clase, la quita; si no la tiene, la agrega)
 elemento.classList.toggle("activo");
-
-// Verificar si tiene una clase
 if (elemento.classList.contains("activo")) {
   console.log("El elemento está activo");
 }
@@ -1800,13 +1473,11 @@ La validación es uno de los aspectos más importantes de nuestro proyecto. Java
 
 ```javascript
 function validarCampoVacio(valor, nombreCampo) {
-  // .trim() elimina espacios en blanco al inicio y final
-  // Si el usuario escribe solo espacios, trim() lo deja vacío
   if (valor.trim() === "") {
     mostrarError(nombreCampo, "Este campo es obligatorio");
-    return false;  // La validación FALLÓ
+    return false;
   }
-  return true;  // La validación PASÓ
+  return true;
 }
 ```
 
@@ -1814,17 +1485,14 @@ function validarCampoVacio(valor, nombreCampo) {
 
 ```javascript
 function validarEmail(email) {
-  // includes() verifica si el string contiene un carácter específico
   if (!email.includes("@")) {
     mostrarError("email", "El email debe contener @");
     return false;
   }
-
   if (!email.includes(".")) {
     mostrarError("email", "El email debe contener un dominio (ej: .com)");
     return false;
   }
-
   return true;
 }
 ```
@@ -1839,12 +1507,10 @@ function validarContrasenas(contrasena, confirmar) {
     mostrarError("contrasena", "La contraseña debe tener al menos 8 caracteres");
     return false;
   }
-
   if (contrasena !== confirmar) {
     mostrarError("confirmar", "Las contraseñas no coinciden");
     return false;
   }
-
   return true;
 }
 ```
@@ -1853,17 +1519,13 @@ function validarContrasenas(contrasena, confirmar) {
 
 ```javascript
 function mostrarError(campo, mensaje) {
-  // Busca el <span> que muestra el error (lo crearemos en el HTML)
   const elementoError = document.getElementById("error-" + campo);
-
   if (elementoError) {
-    elementoError.textContent = mensaje;  // Pone el texto del error
-    elementoError.style.display = "block";  // Muestra el mensaje
+    elementoError.textContent = mensaje;
+    elementoError.style.display = "block";
   }
 }
-
 function limpiarErrores() {
-  // Busca todos los spans de error y los oculta
   const errores = document.querySelectorAll(".error-message");
   errores.forEach(function(error) {
     error.textContent = "";
@@ -1876,33 +1538,22 @@ function limpiarErrores() {
 
 ```javascript
 const formulario = document.getElementById("loginForm");
-
 formulario.addEventListener("submit", function(event) {
-  event.preventDefault();  // Evitar recarga
-
-  // Limpiar errores anteriores
+  event.preventDefault();
   limpiarErrores();
-
-  // Obtener valores
   const email = document.getElementById("email").value;
   const contrasena = document.getElementById("contrasena").value;
-
-  // Validar
   let esValido = true;
-
   if (!validarCampoVacio(email, "email")) {
     esValido = false;
   } else if (!validarEmail(email)) {
     esValido = false;
   }
-
   if (!validarCampoVacio(contrasena, "contrasena")) {
     esValido = false;
   } else if (!validarContrasenas(contrasena, "")) {
     esValido = false;
   }
-
-  // Si todo es válido, procesar
   if (esValido) {
     console.log("Login exitoso:", email);
     alert("¡Bienvenido!");
@@ -1917,20 +1568,13 @@ formulario.addEventListener("submit", function(event) {
 Un **array** es una lista de elementos. Como una lista de la compra:
 
 ```javascript
-// Crear un array vacío
 let frutas = [];
-
-// Agregar elementos
-frutas.push("Manzana");    // frutas = ["Manzana"]
-frutas.push("Pera");       // frutas = ["Manzana", "Pera"]
-frutas.push("Naranja");    // frutas = ["Manzana", "Pera", "Naranja"]
-
-// Acceder a un elemento (empieza en 0)
-console.log(frutas[0]);    // "Manzana"
-console.log(frutas[1]);    // "Pera"
-
-// Longitud del array
-console.log(frutas.length); // 3
+frutas.push("Manzana");
+frutas.push("Pera");
+frutas.push("Naranja");
+console.log(frutas[0]);
+console.log(frutas[1]);
+console.log(frutas.length);
 ```
 
 ### ¿Qué es un objeto?
@@ -1938,7 +1582,6 @@ console.log(frutas.length); // 3
 Un **objeto** es como una ficha técnica: tiene datos con nombres específicos.
 
 ```javascript
-// Crear un objeto
 let producto = {
   id: 1,
   nombre: "Laptop HP",
@@ -1946,17 +1589,14 @@ let producto = {
   categoria: "electronica",
   stock: 15
 };
-
-// Acceder a las propiedades
-console.log(producto.nombre);     // "Laptop HP"
-console.log(producto.precio);     // 599990
-console.log(producto["categoria"]); // "electronica"
+console.log(producto.nombre);
+console.log(producto.precio);
+console.log(producto["categoria"]);
 ```
 
 ### Array de objetos (la combinación más común)
 
 ```javascript
-// Un array que contiene muchos productos
 let productos = [
   {
     id: 1,
@@ -1977,61 +1617,42 @@ let productos = [
     categoria: "ropa"
   }
 ];
-
-// Acceder al primer producto
-console.log(productos[0].nombre);  // "Laptop HP"
-
-// Acceder al precio del segundo producto
-console.log(productos[1].precio);  // 19990
+console.log(productos[0].nombre);
+console.log(productos[1].precio);
 ```
 
 ### Métodos útiles de arrays
 
 ```javascript
 let productos = [];
-
-// .push() - Agregar un elemento al final
 productos.push({
   id: 1,
   nombre: "Laptop",
   precio: 599990
 });
-// productos = [{id: 1, nombre: "Laptop", precio: 599990}]
-
-// .filter() - Crear un nuevo array con elementos que cumplan una condición
 let soloElectronica = productos.filter(function(producto) {
   return producto.categoria === "electronica";
 });
-
-// .find() - Encontrar el PRIMER elemento que cumpla la condición
 let productoEncontrado = productos.find(function(producto) {
   return producto.id === 1;
 });
-
-// .forEach() - Recorrer cada elemento
 productos.forEach(function(producto) {
   console.log(producto.nombre);
 });
-
-// .splice() - Eliminar un elemento
-// splice(indice, cantidadAEliminar)
-productos.splice(0, 1);  // Elimina el primer elemento
+productos.splice(0, 1);
 ```
 
 ### Generar IDs automáticamente
 
 ```javascript
-let contadorID = 1;  // Empieza en 1
-
+let contadorID = 1;
 function crearProducto(datos) {
   let nuevoProducto = {
-    id: contadorID,    // Usa el contador actual
+    id: contadorID,
     nombre: datos.nombre,
     precio: datos.precio,
-    // ... más propiedades
   };
-
-  contadorID++;  // Incrementa para el siguiente producto
+  contadorID++;
   return nuevoProducto;
 }
 ```
@@ -2049,16 +1670,9 @@ let productos = [
   { id: 1, nombre: "Laptop", precio: 599990, imagen: "laptop.jpg" },
   { id: 2, nombre: "Mouse", precio: 19990, imagen: "mouse.jpg" }
 ];
-
 function renderizarProductos() {
-  // 1. Encontrar el contenedor donde se insertarán los productos
   const contenedor = document.getElementById("contenedorProductos");
-
-  // 2. Crear el HTML de cada producto
-  let html = "";  // Variable vacía para construir el HTML
-
-  // NOTA: Aquí usamos una arrow function () => {} y template literals ` `
-  // Se explican más abajo en esta sección
+  let html = "";
   productos.forEach(producto => {
     html += `
       <article class="producto-card">
@@ -2070,8 +1684,6 @@ function renderizarProductos() {
       </article>
     `;
   });
-
-  // 3. Insertar el HTML en el contenedor
   contenedor.innerHTML = html;
 }
 ```
@@ -2079,110 +1691,77 @@ function renderizarProductos() {
 ### Template Literals (backticks)
 
 ```javascript
-// NOTA PARA BACKEND DEVS:
-// En Java usas: "Hola " + nombre + ", bienvenido"
-// En Python usas: f"Hola {nombre}, bienvenido"
-// En JavaScript moderno usas template literals con backticks (`):
-
 let nombre = "Juan";
 let saludo = `Hola ${nombre}, bienvenido`;
-// Resultado: "Hola Juan, bienvenido"
-
-// Ventaja: puedes saltar líneas sin concatenar
 let html = `
   <div>
     <h1>${nombre}</h1>
     <p>Texto</p>
   </div>
 `;
-// Equivalente en Java sería:
-// "<div>\n  <h1>" + nombre + "</h1>\n  <p>Texto</p>\n</div>"
 ```
 
 ### Arrow Functions
 
 ```javascript
-// NOTA PARA BACKEND DEVS:
-// En Java: () -> { }
-// En Python: lambda x: x + 1
-// En JavaScript: () => { }
-
-// Función tradicional
 productos.forEach(function(producto) {
   console.log(producto.nombre);
 });
-
-// Arrow function (más concisa)
 productos.forEach(producto => {
   console.log(producto.nombre);
 });
-
-// Si es una sola línea, puedes omitir las llaves {} y el return implícito
 let duplicados = productos.map(p => p.precio * 2);
-// Equivalente a:
 let duplicados = productos.map(function(p) { return p.precio * 2; });
 ```
 
 ### Cuándo renderizar
 
 ```javascript
-// Renderizar cuando la página carga
 renderizarProductos();
-
-// Renderizar después de agregar un producto
 productos.push(nuevoProducto);
 renderizarProductos();
-
-// Renderizar después de eliminar un producto
 productos = productos.filter(p => p.id !== idAEliminar);
 renderizarProductos();
 ```
 
-## 4.11. Almacenamiento en memoria
+## 4.11. Almacenamiento: localStorage
 
-En nuestro proyecto, los datos se guardan **solo en memoria**. Esto significa que cuando recargas la página, se pierde todo.
+En nuestro proyecto los datos se guardan en el **almacenamiento del navegador** (`localStorage`), así que **persisten al recargar la página**. Se usa en dos puntos:
+
+- `localStorage["usuariosRegistrados"]` → usuarios (predefinidos + registrados)
+- `localStorage["productos"]` → productos (con siembra inicial de 5 demo)
 
 ```javascript
-// Este array guarda TODOS los productos
-// Está en memoria RAM del navegador
-let productos = [];
-
-// Cuando agregas un producto
+const productos = JSON.parse(localStorage.getItem("productos"));
 productos.push(nuevoProducto);
-
-// Cuando recargas la página, productos vuelve a estar vacío []
-// Porque la memoria se limpia
+localStorage.setItem("productos", JSON.stringify(productos));
 ```
 
 **¿Por qué lo hacemos así?**
 - Es más simple (no necesitamos servidor ni base de datos)
 - Para una evaluación escolar es suficiente
-- Lo importante es demostrar que sabes usar arrays y DOM
+- `localStorage` persiste los datos entre recargas de la página
 
-**En un proyecto real,** usarías `localStorage` o una base de datos para que los datos persistan.
+**En un proyecto real**, con muchos datos usarías IndexedDB o una base de datos en el servidor.
+
+> **Nota:** la sesión activa NO se guarda en `localStorage` sino en `sessionStorage` (se cierra al cerrar la pestaña).
 
 ## 4.12. Buenos hábitos JS
 
 ### Usar const y let (nunca var)
 
 ```javascript
-// BIEN:
-const PI = 3.14159;       // const = constante (no cambia)
-let contador = 0;         // let = variable (puede cambiar)
-
-// MAL:
-var contador = 0;         // var es antiguo y puede causar bugs
+const PI = 3.14159;
+let contador = 0;
+var contador = 0;
 ```
 
 ### Nombres descriptivos
 
 ```javascript
-// BIEN: El nombre describe qué guarda
 const precioTotal = 599990;
 const usuariosRegistrados = [];
 function validarEmail(email) { }
-
-// MAL: Nombres genéricos que no dicen nada
 const x = 599990;
 const arr = [];
 function val(e) { }
@@ -2191,11 +1770,8 @@ function val(e) { }
 ### Comentar el código
 
 ```javascript
-// Calcular el precio con IVA (19%)
 const iva = precio * 0.19;
 const precioConIva = precio + iva;
-
-// NOTA: El IVA de Chile es 19%. Fuente: SII.
 ```
 
 ### Manejar errores
@@ -2203,10 +1779,8 @@ const precioConIva = precio + iva;
 ```javascript
 function procesarDatos() {
   try {
-    // Código que podría fallar
     const datos = JSON.parse(datoInvalido);
   } catch (error) {
-    // Si hay un error, se ejecuta esto
     console.error("Error al procesar:", error.message);
   }
 }
@@ -2270,11 +1844,14 @@ Pagina-Ventas-Fullstack-2/
 │   │   ├── app.js
 │   │   └── transitions.js
 │   └── assets/
-│       └── images/
-│           └── portada.png
+│       ├── images/
+│       │   └── portada.png
+│       └── video/
+│           └── muestra-productos.mp4
 ├── .gitignore
 ├── README.md
-└── PLAN.md
+├── PLAN.md
+└── EXPLICACION.md
 ```
 
 **Paso 2:** Verificar que `.gitignore` excluye `Instrucciones.md`
@@ -2300,9 +1877,7 @@ const USUARIOS_INICIALES = [
   { nombre: "Cristobal", email: "cris@correo.com", contrasena: "12345678" },
   { nombre: "Francisca", email: "fran@correo.com", contrasena: "12345678" },
 ];
-
 let usuarios = cargarUsuarios();
-
 function cargarUsuarios() {
   let guardados = [];
   try {
@@ -2313,7 +1888,6 @@ function cargarUsuarios() {
   } catch {}
   return USUARIOS_INICIALES.concat(guardados);
 }
-
 function guardarUsuarios() {
   try {
     const registrados = usuarios.filter(function (usuario) {
@@ -2324,16 +1898,11 @@ function guardarUsuarios() {
     localStorage.setItem("usuariosRegistrados", JSON.stringify(registrados));
   } catch {}
 }
-
-// ponytail: contraseñas en texto plano en localStorage, suficiente para la práctica.
-// Para un sistema real usar hash del lado del servidor.
-
 function buscarUsuario(email) {
   return usuarios.find(function (usuario) {
     return usuario.email === email;
   });
 }
-
 function validarLogin(email, contrasena) {
   const usuario = buscarUsuario(email);
   if (usuario && usuario.contrasena === contrasena) {
@@ -2341,7 +1910,6 @@ function validarLogin(email, contrasena) {
   }
   return false;
 }
-
 function registrarUsuario(nombre, email, contrasena) {
   const existe = buscarUsuario(email);
   if (existe) {
@@ -2355,7 +1923,6 @@ function registrarUsuario(nombre, email, contrasena) {
   guardarUsuarios();
   return true;
 }
-
 function guardarSesion(usuario) {
   sessionStorage.setItem(
     "usuarioActivo",
@@ -2365,7 +1932,6 @@ function guardarSesion(usuario) {
     }),
   );
 }
-
 function obtenerSesion() {
   const sesion = sessionStorage.getItem("usuarioActivo");
   if (sesion) {
@@ -2373,11 +1939,9 @@ function obtenerSesion() {
   }
   return null;
 }
-
 function cerrarSesion() {
   sessionStorage.removeItem("usuarioActivo");
 }
-
 function verificarSesion() {
   const sesion = obtenerSesion();
   if (!sesion) {
@@ -2409,13 +1973,17 @@ Crea el archivo `src/pages/login.html` con el siguiente código:
   </head>
   <body class="login-page">
     <header>
+      <section class="logo-portada">
+        <img
+          src="../assets/images/portada.png"
+          alt="Portada de la tienda con productos"
+        />
+      </section>
       <h1>Yorozu 万 / よろず - Registro de productos</h1>
     </header>
-
     <main class="login-main">
       <section class="login-section" aria-labelledby="login-title">
         <h2 id="login-title">Iniciar sesión</h2>
-
         <form id="loginForm" novalidate>
           <label for="email">Correo electrónico</label>
           <input
@@ -2432,7 +2000,6 @@ Crea el archivo `src/pages/login.html` con el siguiente código:
             class="error-message"
             aria-live="polite"
           ></span>
-
           <label for="contrasena">Contraseña</label>
           <input
             type="password"
@@ -2449,30 +2016,26 @@ Crea el archivo `src/pages/login.html` con el siguiente código:
             class="error-message"
             aria-live="polite"
           ></span>
-
           <button type="submit">Iniciar sesión</button>
         </form>
-
         <section class="boton-cuenta-nueva">
           <p>¿No tiene cuenta? ¡Regístrese ahora mismo!</p>
           <a href="registro.html" class="button">Crear cuenta nueva</a>
         </section>
       </section>
-
       <section class="imagen-portada">
-        <img
-          src="../assets/images/portada.png"
-          alt="Portada de la tienda con productos"
-          height="600"
-          width="600"
-        />
+        <video
+          src="../assets/video/muestra-productos.mp4"
+          autoplay
+          muted
+          loop
+          playsinline
+        ></video>
       </section>
     </main>
-
     <footer>
       <p>&copy; Registro de productos - Evaluación Fullstack II</p>
     </footer>
-
     <script src="../js/auth.js"></script>
     <script src="../js/login.js"></script>
     <script src="../js/transitions.js"></script>
@@ -2485,7 +2048,7 @@ Crea el archivo `src/pages/login.html` con el siguiente código:
 **Commit:**
 ```bash
 git add src/pages/login.html
-git commit -m "feat: crear página principal login.html con formulario y portada"
+git commit -m "feat: crear página principal login.html con formulario y video de muestra"
 ```
 
 ### JavaScript - Código completo
@@ -2493,11 +2056,6 @@ git commit -m "feat: crear página principal login.html con formulario y portada
 Copia esto en `src/js/login.js`:
 
 ```javascript
-// ========================================
-// FUNCIONES DE VALIDACIÓN
-// ========================================
-
-// Muestra un mensaje de error debajo del campo
 function mostrarError(campo, mensaje) {
   const elementoError = document.getElementById("error-" + campo);
   if (elementoError) {
@@ -2505,8 +2063,6 @@ function mostrarError(campo, mensaje) {
     elementoError.style.display = "block";
   }
 }
-
-// Oculta todos los mensajes de error
 function limpiarErrores() {
   const errores = document.querySelectorAll(".error-message");
   errores.forEach(function (error) {
@@ -2514,8 +2070,6 @@ function limpiarErrores() {
     error.style.display = "none";
   });
 }
-
-// Verifica si un campo está vacío
 function validarCampoVacio(valor, nombreCampo) {
   if (valor.trim() === "") {
     mostrarError(nombreCampo, "Este campo es obligatorio");
@@ -2523,8 +2077,6 @@ function validarCampoVacio(valor, nombreCampo) {
   }
   return true;
 }
-
-// Verifica si un email tiene formato válido
 function validarEmail(email) {
   if (!email.includes("@")) {
     mostrarError("email", "El correo debe contener @");
@@ -2536,32 +2088,19 @@ function validarEmail(email) {
   }
   return true;
 }
-
-// ========================================
-// VALIDACIÓN DE LOGIN
-// ========================================
-
-// El listener solo se crea si el formulario de login existe en la página
 const loginForm = document.getElementById("loginForm");
 if (loginForm) {
   loginForm.addEventListener("submit", function (event) {
-    // Previene que la página se recargue
     event.preventDefault();
     limpiarErrores();
-
-    // Obtiene los valores de los campos
     const email = document.getElementById("email").value;
     const contrasena = document.getElementById("contrasena").value;
-
-    // Valida cada campo
     let esValido = true;
-
     if (!validarCampoVacio(email, "email")) {
       esValido = false;
     } else if (!validarEmail(email)) {
       esValido = false;
     }
-
     if (!validarCampoVacio(contrasena, "contrasena")) {
       esValido = false;
     } else if (contrasena.length < 8) {
@@ -2571,8 +2110,6 @@ if (loginForm) {
       );
       esValido = false;
     }
-
-    // Si todo es válido, intenta iniciar sesión con auth.js
     if (esValido) {
       const loginExitoso = validarLogin(email, contrasena);
       if (loginExitoso) {
@@ -2585,12 +2122,6 @@ if (loginForm) {
     }
   });
 }
-
-// ========================================
-// VALIDACIÓN DE REGISTRO
-// ========================================
-
-// Verifica que las contraseñas coincidan
 function validarContrasenas(contrasena, confirmar) {
   if (contrasena.length < 8) {
     mostrarError(
@@ -2605,42 +2136,32 @@ function validarContrasenas(contrasena, confirmar) {
   }
   return true;
 }
-
-// El listener solo se crea si el formulario de registro existe en la página
 const registroForm = document.getElementById("registerForm");
 if (registroForm) {
   registroForm.addEventListener("submit", function (event) {
     event.preventDefault();
     limpiarErrores();
-
     const nombre = document.getElementById("nombre").value;
     const email = document.getElementById("email").value;
     const contrasena = document.getElementById("contrasena").value;
     const confirmar = document.getElementById("confirmar").value;
-
     let esValido = true;
-
     if (!validarCampoVacio(nombre, "nombre")) {
       esValido = false;
     }
-
     if (!validarCampoVacio(email, "email")) {
       esValido = false;
     } else if (!validarEmail(email)) {
       esValido = false;
     }
-
     if (!validarCampoVacio(contrasena, "contrasena")) {
       esValido = false;
     }
-
     if (!validarCampoVacio(confirmar, "confirmar")) {
       esValido = false;
     } else if (!validarContrasenas(contrasena, confirmar)) {
       esValido = false;
     }
-
-    // Si todo es válido, intenta registrar con auth.js
     if (esValido) {
       const registroExitoso = registrarUsuario(nombre, email, contrasena);
       if (registroExitoso) {
@@ -2687,7 +2208,6 @@ Copia esto en `src/pages/registro.html`:
         />
       </section>
     </header>
-
     <main class="register-main">
       <h2>Registrarse en el Sistema</h2>
       <form id="registerForm">
@@ -2701,7 +2221,6 @@ Copia esto en `src/pages/registro.html`:
           required
         />
         <span id="error-nombre" class="error-message"></span>
-
         <label for="email">Correo Electrónico</label>
         <input
           type="email"
@@ -2712,7 +2231,6 @@ Copia esto en `src/pages/registro.html`:
           required
         />
         <span id="error-email" class="error-message"></span>
-
         <label for="contrasena">Contraseña</label>
         <input
           type="password"
@@ -2724,7 +2242,6 @@ Copia esto en `src/pages/registro.html`:
           required
         />
         <span id="error-contrasena" class="error-message"></span>
-
         <label for="confirmar">Confirmar Contraseña</label>
         <input
           type="password"
@@ -2736,12 +2253,10 @@ Copia esto en `src/pages/registro.html`:
           required
         />
         <span id="error-confirmar" class="error-message"></span>
-
         <button type="submit">Crear cuenta</button>
       </form>
       <p>¿Ya tienes cuenta? <a href="login.html">Inicia sesion</a></p>
     </main>
-
     <footer>
       <p>&copy; Registro de productos - Evaluación Fullstack II</p>
     </footer>
@@ -2760,7 +2275,7 @@ git add src/pages/registro.html
 git commit -m "feat: crear página de registro con validación"
 ```
 
-## 5.6. Fase 6: index.html - Panel de Productos
+## 5.5. Fase 5: index.html - Panel de Productos
 
 El panel tiene **dos interfaces separadas** dentro del mismo HTML, conmutables con las pestañas: una para **registrar/editar** productos y otra para **verlos** en una tabla horizontal.
 
@@ -2787,7 +2302,6 @@ Copia esto en `src/pages/index.html`:
         </ul>
       </nav>
     </header>
-
     <main>
       <nav class="vistas-nav" aria-label="Secciones del panel">
         <button
@@ -2807,7 +2321,6 @@ Copia esto en `src/pages/index.html`:
           Ver Productos
         </button>
       </nav>
-
       <section
         id="vista-registro"
         class="vista activa"
@@ -2830,7 +2343,6 @@ Copia esto en `src/pages/index.html`:
               class="error-message"
               aria-live="polite"
             ></span>
-
             <label for="prodNombre">Nombre</label>
             <input
               type="text"
@@ -2845,7 +2357,6 @@ Copia esto en `src/pages/index.html`:
               class="error-message"
               aria-live="polite"
             ></span>
-
             <label for="prodDescripcion">Descripción</label>
             <textarea
               id="prodDescripcion"
@@ -2859,7 +2370,6 @@ Copia esto en `src/pages/index.html`:
               class="error-message"
               aria-live="polite"
             ></span>
-
             <label for="prodPrecio">Precio</label>
             <input
               type="number"
@@ -2875,7 +2385,6 @@ Copia esto en `src/pages/index.html`:
               class="error-message"
               aria-live="polite"
             ></span>
-
             <label for="prodCategoria">Categoría</label>
             <select id="prodCategoria" name="prodCategoria" required>
               <option value="">-- Selecciona una categoría --</option>
@@ -2889,7 +2398,6 @@ Copia esto en `src/pages/index.html`:
               class="error-message"
               aria-live="polite"
             ></span>
-
             <label for="prodStock">Stock</label>
             <input
               type="number"
@@ -2904,26 +2412,46 @@ Copia esto en `src/pages/index.html`:
               class="error-message"
               aria-live="polite"
             ></span>
-
+            <fieldset class="imagen-opciones">
+              <legend>Imagen del producto</legend>
+              <label>
+                <input type="radio" name="tipoImagen" value="url" checked />
+                Usar URL
+              </label>
+              <label>
+                <input type="radio" name="tipoImagen" value="archivo" />
+                Subir archivo
+              </label>
+            </fieldset>
             <label for="prodImagen">URL de la Imagen</label>
             <input
               type="url"
               id="prodImagen"
               name="prodImagen"
               placeholder="https://ejemplo.com/imagen.jpg"
-              required
             />
             <span
               id="error-prodImagen"
               class="error-message"
               aria-live="polite"
             ></span>
-
+            <label for="prodImagenArchivo" hidden>Seleccionar imagen</label>
+            <input
+              type="file"
+              id="prodImagenArchivo"
+              name="prodImagenArchivo"
+              accept="image/*"
+              hidden
+            />
+            <span
+              id="error-prodImagenArchivo"
+              class="error-message"
+              aria-live="polite"
+            ></span>
             <button type="submit" id="btnRegistrar">Registrar Producto</button>
           </form>
         </article>
       </section>
-
       <section
         id="vista-lista"
         class="vista"
@@ -2949,17 +2477,30 @@ Copia esto en `src/pages/index.html`:
               </tr>
             </thead>
             <tbody id="contenedorProductos">
-              <!-- JavaScript genera las filas de productos aquí -->
             </tbody>
           </table>
+          <template id="fila-producto">
+            <tr>
+              <td data-label="Imagen">
+                <img src="" alt="" loading="lazy" />
+              </td>
+              <td data-label="Nombre"></td>
+              <td data-label="Descripción"></td>
+              <td data-label="Precio"></td>
+              <td data-label="Categoría"></td>
+              <td data-label="Stock"></td>
+              <td class="acciones">
+                <button type="button" class="btn-editar">Editar</button>
+                <button type="button" class="btn-eliminar">Eliminar</button>
+              </td>
+            </tr>
+          </template>
         </article>
       </section>
     </main>
-
     <footer>
       <p>&copy; Registro de productos - Evaluación Fullstack II</p>
     </footer>
-
     <script src="../js/auth.js"></script>
     <script src="../js/app.js"></script>
   </body>
@@ -2971,28 +2512,94 @@ Copia esto en `src/pages/index.html`:
 Copia esto en `src/js/app.js`:
 
 ```javascript
-// ========================================
-// VERIFICACIÓN DE SESIÓN
-// ========================================
-
-// Si no hay sesión activa, redirige a login.html
 verificarSesion();
-
-// ========================================
-// VARIABLES GLOBALES
-// ========================================
-
-// Array para guardar los productos (en memoria)
-let productos = [];
-
-// ID del producto que se está editando (null si no se está editando)
+let productos = cargarProductos();
 let editandoId = null;
-
-// ========================================
-// FUNCIONES DE UTILIDAD
-// ========================================
-
-// Muestra un mensaje de error debajo del campo
+renderizarProductos();
+let imagenArchivo = null;
+function cargarProductos() {
+  try {
+    const datos = localStorage.getItem("productos");
+    if (!datos) {
+      const demo = crearProductosDemo();
+      localStorage.setItem("productos", JSON.stringify(demo));
+      return demo;
+    }
+    const guardados = JSON.parse(datos);
+    if (guardados.length === 0) {
+      const demo = crearProductosDemo();
+      localStorage.setItem("productos", JSON.stringify(demo));
+      return demo;
+    }
+    return guardados;
+  } catch {
+    return [];
+  }
+}
+function crearProductosDemo() {
+  return [
+    {
+      id: 1,
+      nombre: "Momentum Intense",
+      descripcion: "Perfume Bentley con diseño de lujo, ideal para edición nocturna.",
+      precio: 89900,
+      categoria: "otros",
+      stock: 12,
+      imagen:
+        "https://images.pexels.com/photos/7270666/pexels-photo-7270666.jpeg?auto=compress&cs=tinysrgb&w=1280",
+    },
+    {
+      id: 2,
+      nombre: "Chronos Steel",
+      descripcion: "Reloj de acero pulido con proporciones limpias y lectura impecable.",
+      precio: 159900,
+      categoria: "otros",
+      stock: 5,
+      imagen:
+        "https://images.pexels.com/photos/26626530/pexels-photo-26626530.jpeg?auto=compress&cs=tinysrgb&w=1280",
+    },
+    {
+      id: 3,
+      nombre: "Studio Silence",
+      descripcion: "Audífonos para jornadas de trabajo sin interrupciones.",
+      precio: 74900,
+      categoria: "electronica",
+      stock: 8,
+      imagen:
+        "https://images.pexels.com/photos/10292808/pexels-photo-10292808.jpeg?auto=compress&cs=tinysrgb&w=1280",
+    },
+    {
+      id: 4,
+      nombre: "Frame 02",
+      descripcion: "Lentes de sol con una silueta sobria y acabados que marcan la diferencia.",
+      precio: 49900,
+      categoria: "otros",
+      stock: 15,
+      imagen:
+        "https://images.pexels.com/photos/10837801/pexels-photo-10837801.jpeg?auto=compress&cs=tinysrgb&w=1280",
+    },
+    {
+      id: 5,
+      nombre: "Carry Set",
+      descripcion: "Billetera y llavero de cuero premium para acompañar cada movimiento.",
+      precio: 39900,
+      categoria: "ropa",
+      stock: 20,
+      imagen:
+        "https://images.pexels.com/photos/33242820/pexels-photo-33242820.jpeg?auto=compress&cs=tinysrgb&w=1280",
+    },
+  ];
+}
+function guardarProductos() {
+  try {
+    localStorage.setItem("productos", JSON.stringify(productos));
+  } catch {
+    mostrarError(
+      "prodImagen",
+      "No se pudo guardar (límite de almacenamiento del navegador)",
+    );
+  }
+}
 function mostrarError(campo, mensaje) {
   const elementoError = document.getElementById("error-" + campo);
   if (elementoError) {
@@ -3000,21 +2607,16 @@ function mostrarError(campo, mensaje) {
     elementoError.style.display = "block";
   }
 }
-
-// Muestra una de las dos vistas del panel y marca la pestaña activa
 function mostrarVista(vista) {
   document.querySelectorAll(".vista").forEach(function (seccion) {
     seccion.classList.toggle("activa", seccion.id === "vista-" + vista);
   });
-
   document.querySelectorAll(".tab-btn").forEach(function (boton) {
     const activo = boton.dataset.vista === vista;
     boton.classList.toggle("activa", activo);
     boton.setAttribute("aria-selected", activo ? "true" : "false");
   });
 }
-
-// Oculta todos los mensajes de error
 function limpiarErrores() {
   const errores = document.querySelectorAll(".error-message");
   errores.forEach(function (error) {
@@ -3022,11 +2624,6 @@ function limpiarErrores() {
     error.style.display = "none";
   });
 }
-
-// ========================================
-// CERRAR SESIÓN
-// ========================================
-
 document
   .getElementById("cerrar-sesion")
   .addEventListener("click", function (event) {
@@ -3034,68 +2631,58 @@ document
     cerrarSesion();
     window.location.href = "login.html";
   });
-
-// ========================================
-// FUNCIONES CRUD
-// ========================================
-
-// Registrar o actualizar un producto
 function registrarProducto(event) {
   event.preventDefault();
-
-  // Limpiar errores anteriores
   limpiarErrores();
-
-  // Obtener valores del formulario
   const id = document.getElementById("prodId").value;
   const nombre = document.getElementById("prodNombre").value;
   const descripcion = document.getElementById("prodDescripcion").value;
   const precio = document.getElementById("prodPrecio").value;
   const categoria = document.getElementById("prodCategoria").value;
   const stock = document.getElementById("prodStock").value;
-  const imagen = document.getElementById("prodImagen").value;
-
-  // Validar campos
+  const tipoImagen = document.querySelector(
+    'input[name="tipoImagen"]:checked',
+  ).value;
   let esValido = true;
-
   if (!id || id < 1) {
     mostrarError("prodId", "Ingrese un ID válido (mayor a 0)");
     esValido = false;
   }
-
   if (!nombre.trim()) {
     mostrarError("prodNombre", "Este campo es obligatorio");
     esValido = false;
   }
-
   if (!descripcion.trim()) {
     mostrarError("prodDescripcion", "Este campo es obligatorio");
     esValido = false;
   }
-
   if (!precio || precio < 0) {
     mostrarError("prodPrecio", "Ingrese un precio válido");
     esValido = false;
   }
-
   if (!categoria) {
     mostrarError("prodCategoria", "Selecciona una categoría");
     esValido = false;
   }
-
   if (!stock || stock < 0) {
     mostrarError("prodStock", "Ingrese un stock válido");
     esValido = false;
   }
-
-  if (!imagen.trim()) {
-    mostrarError("prodImagen", "Este campo es obligatorio");
-    esValido = false;
+  let imagen;
+  if (tipoImagen === "archivo") {
+    imagen = imagenArchivo;
+    if (!imagen) {
+      mostrarError("prodImagenArchivo", "Seleccione una imagen para subir");
+      esValido = false;
+    }
+  } else {
+    imagen = document.getElementById("prodImagen").value;
+    if (!imagen.trim()) {
+      mostrarError("prodImagen", "Este campo es obligatorio");
+      esValido = false;
+    }
   }
-
   if (!esValido) return;
-
-  // Crear objeto producto
   const producto = {
     id: parseInt(id, 10),
     nombre: nombre,
@@ -3105,8 +2692,6 @@ function registrarProducto(event) {
     stock: parseInt(stock, 10),
     imagen: imagen,
   };
-
-  // Si estamos editando, actualizar. Si no, agregar nuevo.
   if (editandoId !== null) {
     const indice = productos.findIndex((p) => p.id === editandoId);
     if (indice !== -1) {
@@ -3115,7 +2700,6 @@ function registrarProducto(event) {
     editandoId = null;
     document.getElementById("btnRegistrar").textContent = "Registrar Producto";
   } else {
-    // Verificar que el ID no exista
     const existe = productos.some((p) => p.id === producto.id);
     if (existe) {
       mostrarError("prodId", "Ya existe un producto con ese ID");
@@ -3123,116 +2707,126 @@ function registrarProducto(event) {
     }
     productos.push(producto);
   }
-
-  // Actualizar la lista visual y mostrar la vista de productos
+  guardarProductos();
   renderizarProductos();
   mostrarVista("lista");
-
-  // Limpiar el formulario
   limpiarFormulario();
 }
-
-// Renderizar (mostrar) todos los productos en una tabla horizontal
 function renderizarProductos() {
   const contenedor = document.getElementById("contenedorProductos");
-
+  contenedor.innerHTML = "";
   if (productos.length === 0) {
-    contenedor.innerHTML = `
-      <tr>
-        <td colspan="7" class="sin-productos">No hay productos registrados.</td>
-      </tr>
-    `;
+    const fila = document.createElement("tr");
+    const celda = document.createElement("td");
+    celda.colSpan = 7;
+    celda.className = "sin-productos";
+    celda.textContent = "No hay productos registrados.";
+    fila.appendChild(celda);
+    contenedor.appendChild(fila);
     return;
   }
-
-  let html = "";
-
+  const plantilla = document.getElementById("fila-producto");
   productos.forEach(function (producto) {
-    html += `
-      <tr>
-        <td data-label="Imagen">
-          <img src="${producto.imagen}" alt="${producto.nombre}" loading="lazy">
-        </td>
-        <td data-label="Nombre">${producto.nombre}</td>
-        <td data-label="Descripción">${producto.descripcion}</td>
-        <td data-label="Precio">$${producto.precio}</td>
-        <td data-label="Categoría">${producto.categoria}</td>
-        <td data-label="Stock">${producto.stock}</td>
-        <td class="acciones">
-          <button onclick="editarProducto(${producto.id})" class="btn-editar">Editar</button>
-          <button onclick="eliminarProducto(${producto.id})" class="btn-eliminar">Eliminar</button>
-        </td>
-      </tr>
-    `;
+    const fila = plantilla.content.cloneNode(true);
+    const imagen = fila.querySelector("img");
+    imagen.src = producto.imagen;
+    imagen.alt = producto.nombre;
+    fila.querySelector('[data-label="Nombre"]').textContent = producto.nombre;
+    fila.querySelector('[data-label="Descripción"]').textContent =
+      producto.descripcion;
+    fila.querySelector('[data-label="Precio"]').textContent =
+      "$" + producto.precio;
+    fila.querySelector('[data-label="Categoría"]').textContent =
+      producto.categoria;
+    fila.querySelector('[data-label="Stock"]').textContent = producto.stock;
+    fila.querySelector(".btn-editar").onclick = function () {
+      editarProducto(producto.id);
+    };
+    fila.querySelector(".btn-eliminar").onclick = function () {
+      eliminarProducto(producto.id);
+    };
+    contenedor.appendChild(fila);
   });
-
-  contenedor.innerHTML = html;
 }
-
-// Cargar un producto en el formulario para editarlo
 function editarProducto(id) {
   const producto = productos.find((p) => p.id === id);
   if (!producto) return;
-
-  // Llenar el formulario con los datos del producto
   document.getElementById("prodId").value = producto.id;
-  document.getElementById("prodId").disabled = true; // No permitir cambiar el ID
+  document.getElementById("prodId").disabled = true;
   document.getElementById("prodNombre").value = producto.nombre;
   document.getElementById("prodDescripcion").value = producto.descripcion;
   document.getElementById("prodPrecio").value = producto.precio;
   document.getElementById("prodCategoria").value = producto.categoria;
   document.getElementById("prodStock").value = producto.stock;
-  document.getElementById("prodImagen").value = producto.imagen;
-
-  // Cambiar el botón a "Actualizar"
+  if (producto.imagen && producto.imagen.startsWith("data:")) {
+    setTipoImagen("archivo");
+    imagenArchivo = producto.imagen;
+  } else {
+    setTipoImagen("url");
+    document.getElementById("prodImagen").value = producto.imagen || "";
+  }
   editandoId = id;
   document.getElementById("btnRegistrar").textContent = "Actualizar Producto";
-
-  // Mostrar la vista del formulario para editar
   mostrarVista("registro");
 }
-
-// Eliminar un producto
 function eliminarProducto(id) {
   if (!confirm("¿Estás seguro de eliminar este producto?")) return;
-
   productos = productos.filter((p) => p.id !== id);
+  guardarProductos();
   renderizarProductos();
 }
-
-// Limpiar el formulario
 function limpiarFormulario() {
   document.getElementById("productoForm").reset();
+  setTipoImagen("url");
+  imagenArchivo = null;
   document.getElementById("prodId").disabled = false;
   editandoId = null;
   document.getElementById("btnRegistrar").textContent = "Registrar Producto";
 }
-
-// ========================================
-// EVENT LISTENER
-// ========================================
-
+function setTipoImagen(tipo) {
+  const campoUrl = document.getElementById("prodImagen");
+  const campoArchivo = "prodImagenArchivo";
+  document.querySelector(
+    'input[name="tipoImagen"][value="' + tipo + '"]',
+  ).checked = true;
+  campoUrl.hidden = tipo !== "url";
+  document.getElementById(campoArchivo).hidden = tipo !== "archivo";
+  document.querySelector('label[for="' + campoArchivo + '"]').hidden =
+    tipo !== "archivo";
+}
+document.querySelectorAll('input[name="tipoImagen"]').forEach(function (radio) {
+  radio.addEventListener("change", function () {
+    setTipoImagen(radio.value);
+  });
+});
+document
+  .getElementById("prodImagenArchivo")
+  .addEventListener("change", function (event) {
+    const archivo = event.target.files[0];
+    if (!archivo) {
+      imagenArchivo = null;
+      return;
+    }
+    const lector = new FileReader();
+    lector.onload = function (e) {
+      imagenArchivo = e.target.result;
+    };
+    lector.readAsDataURL(archivo);
+  });
 document
   .getElementById("productoForm")
   .addEventListener("submit", registrarProducto);
-
-// Cambiar de vista con las pestañas
 document.querySelectorAll(".tab-btn").forEach(function (boton) {
   boton.addEventListener("click", function () {
     mostrarVista(boton.dataset.vista);
   });
 });
-
-// Botón "Agregar Producto": limpia el formulario y va a la vista de registro
 document
   .getElementById("btn-nuevo-producto")
   .addEventListener("click", function () {
     limpiarFormulario();
     mostrarVista("registro");
   });
-
-// ponytail: productos en memoria (sin persistencia), el plan exige array en memoria.
-// Para persistir entre recargas, usar localStorage agregando 2 líneas en registrar/eliminar.
 ```
 
 > **Nota:** `app.js` NO se carga en `login.html` ni `registro.html`. Solo existe en `index.html` (protegido). Al cargar ejecuta `verificarSesion()`; si no hay sesión, `auth.js` redirige a login.
@@ -3243,7 +2837,7 @@ git add src/pages/index.html src/js/app.js
 git commit -m "feat: crear página principal con CRUD de productos"
 ```
 
-## 5.7. Fase 7: styles-login.css
+## 5.6. Fase 6: styles-login.css
 
 ### CSS - Código completo
 
@@ -3251,7 +2845,6 @@ Copia esto en `src/css/styles-login.css`:
 
 ```css
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
-
 *,
 *::before,
 *::after {
@@ -3259,7 +2852,6 @@ Copia esto en `src/css/styles-login.css`:
   margin: 0;
   padding: 0;
 }
-
 :root {
   --bg-primary: #0a0e17;
   --bg-secondary: #111827;
@@ -3280,15 +2872,12 @@ Copia esto en `src/css/styles-login.css`:
   --radius: 6px;
   --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 html {
   color-scheme: dark;
 }
-
 @view-transition {
   navigation: auto;
 }
-
 body.login-page {
   margin: 0;
   padding: 0;
@@ -3306,19 +2895,19 @@ body.login-page {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 ::selection {
   background: var(--accent-cyan-dim);
   color: var(--accent-cyan);
 }
-
 header {
   width: 100%;
   max-width: 1100px;
-  text-align: right;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
   padding: 24px 32px;
 }
-
 header h1 {
   font-size: 25px;
   font-weight: 500;
@@ -3326,7 +2915,27 @@ header h1 {
   text-align: center;
   text-transform: uppercase;
 }
-
+.logo-portada {
+  width: 72px;
+  height: 72px;
+  overflow: hidden;
+  border-radius: 12px;
+  border: 1px solid var(--accent-cyan);
+  box-shadow: var(--glow-cyan);
+}
+.logo-portada img {
+  display: block;
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  transform: scale(1.7);
+  transform-origin: center;
+  opacity: 0.9;
+  transition: opacity var(--transition);
+}
+.logo-portada:hover {
+  opacity: 1;
+}
 .login-main {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -3339,7 +2948,6 @@ header h1 {
   padding: 0 32px;
   flex: 1;
 }
-
 .imagen-portada {
   border-radius: 10px;
   grid-column: 1;
@@ -3349,8 +2957,8 @@ header h1 {
   align-items: center;
   justify-self: center;
 }
-
-.imagen-portada img {
+.imagen-portada img,
+.imagen-portada video {
   border-radius: 10px;
   max-width: 100%;
   height: auto;
@@ -3363,11 +2971,10 @@ header h1 {
     0 0 20px #0ff,
     inset 0 0 10px #0ff;
 }
-
-.imagen-portada img:hover {
+.imagen-portada img:hover,
+.imagen-portada video:hover {
   opacity: 1;
 }
-
 .login-section {
   grid-column: 2;
   grid-row: 1;
@@ -3385,7 +2992,6 @@ header h1 {
   max-width: 380px;
   view-transition-name: main-card;
 }
-
 .boton-cuenta-nueva {
   width: 100%;
   max-width: 320px;
@@ -3395,7 +3001,6 @@ header h1 {
   text-align: center;
   font-size: 14px;
 }
-
 .login-section h2 {
   font-size: 28px;
   font-weight: 700;
@@ -3403,7 +3008,6 @@ header h1 {
   color: var(--text-primary);
   letter-spacing: -0.02em;
 }
-
 form {
   display: flex;
   flex-direction: column;
@@ -3411,7 +3015,6 @@ form {
   width: 100%;
   max-width: 320px;
 }
-
 form label {
   font-size: 13px;
   font-weight: 500;
@@ -3419,7 +3022,6 @@ form label {
   margin-bottom: 6px;
   letter-spacing: 0.02em;
 }
-
 form input {
   width: 100%;
   padding: 12px 16px;
@@ -3435,16 +3037,13 @@ form input {
     box-shadow var(--transition);
   outline: none;
 }
-
 form input::placeholder {
   color: var(--text-muted);
 }
-
 form input:focus {
   border-color: var(--accent-cyan);
   box-shadow: 0 0 0 3px var(--accent-cyan-dim);
 }
-
 form button {
   width: 100%;
   padding: 12px 24px;
@@ -3463,17 +3062,14 @@ form button {
   margin-top: 4px;
   letter-spacing: 0.02em;
 }
-
 form button:hover {
   background: #33dfff;
   box-shadow: var(--glow-cyan);
   transform: translateY(-1px);
 }
-
 form button:active {
   transform: translateY(0);
 }
-
 .boton-cuenta-nueva {
   grid-column: 2;
   grid-row: 1;
@@ -3485,12 +3081,10 @@ form button:active {
   max-width: 380px;
   padding-bottom: 24px;
 }
-
 .boton-cuenta-nueva p {
   margin-bottom: 8px;
   color: var(--text-secondary);
 }
-
 .boton-cuenta-nueva a.button {
   color: var(--accent-purple);
   text-decoration: none;
@@ -3499,12 +3093,10 @@ form button:active {
     color var(--transition),
     text-shadow var(--transition);
 }
-
 .boton-cuenta-nueva a.button:hover {
   color: #c084fc;
   text-shadow: var(--glow-purple);
 }
-
 .error-message {
   color: #f87171;
   font-size: 12px;
@@ -3512,7 +3104,6 @@ form button:active {
   margin-bottom: 8px;
   min-height: 16px;
 }
-
 footer {
   width: 100%;
   text-align: center;
@@ -3520,7 +3111,6 @@ footer {
   padding: 24px 32px;
   border-top: 1px solid var(--border-subtle);
 }
-
 footer a {
   color: var(--text-muted);
   text-decoration: none;
@@ -3531,17 +3121,14 @@ footer a {
   letter-spacing: 0.06em;
   transition: color var(--transition);
 }
-
 footer a:hover {
   color: var(--accent-cyan);
 }
-
 footer p {
   margin-top: 12px;
   color: var(--text-muted);
   font-size: 11px;
 }
-
 @media (max-width: 768px) {
   .login-main {
     grid-template-columns: 1fr;
@@ -3549,18 +3136,16 @@ footer p {
     padding: 0 20px;
     justify-items: center;
   }
-
   .imagen-portada {
     grid-column: 1;
     grid-row: auto;
     order: -1;
     justify-self: center;
   }
-
-  .imagen-portada img {
+  .imagen-portada img,
+  .imagen-portada video {
     max-width: 320px;
   }
-
   .login-section {
     grid-column: 1;
     grid-row: auto;
@@ -3568,8 +3153,9 @@ footer p {
     max-width: 380px;
     width: 100%;
   }
-
   header {
+    flex-direction: column;
+    align-items: center;
     text-align: center;
     padding: 20px;
   }
@@ -3582,7 +3168,7 @@ git add src/css/styles-login.css
 git commit -m "feat: crear estilos CSS para la página de login"
 ```
 
-## 5.8. Fase 8: styles-registro.css
+## 5.7. Fase 7: styles-registro.css
 
 ### CSS - Código completo
 
@@ -3590,7 +3176,6 @@ Copia esto en `src/css/styles-registro.css`:
 
 ```css
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
-
 *,
 *::before,
 *::after {
@@ -3598,7 +3183,6 @@ Copia esto en `src/css/styles-registro.css`:
   margin: 0;
   padding: 0;
 }
-
 :root {
   --bg-primary: #0a0e17;
   --bg-secondary: #111827;
@@ -3619,15 +3203,12 @@ Copia esto en `src/css/styles-registro.css`:
   --radius: 6px;
   --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 html {
   color-scheme: dark;
 }
-
 @view-transition {
   navigation: auto;
 }
-
 body.register-page {
   margin: 0;
   padding: 0;
@@ -3645,12 +3226,10 @@ body.register-page {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 ::selection {
   background: var(--accent-cyan-dim);
   color: var(--accent-cyan);
 }
-
 header {
   width: 100%;
   max-width: 1100px;
@@ -3660,7 +3239,6 @@ header {
   gap: 24px;
   padding: 24px 32px;
 }
-
 header h1 {
   font-size: 20px;
   font-weight: 500;
@@ -3668,7 +3246,6 @@ header h1 {
   color: var(--text-muted);
   text-transform: uppercase;
 }
-
 .imagen-portada {
   width: 72px;
   height: 72px;
@@ -3677,7 +3254,6 @@ header h1 {
   border: 1px solid var(--accent-cyan);
   box-shadow: var(--glow-cyan);
 }
-
 .imagen-portada img {
   display: block;
   width: 72px;
@@ -3688,11 +3264,9 @@ header h1 {
   opacity: 0.9;
   transition: opacity var(--transition);
 }
-
 .imagen-portada:hover {
   opacity: 1;
 }
-
 .register-main {
   width: 100%;
   max-width: 460px;
@@ -3703,7 +3277,6 @@ header h1 {
   margin: 0 20px 40px;
   view-transition-name: main-card;
 }
-
 .register-main h2 {
   font-size: 28px;
   font-weight: 700;
@@ -3712,14 +3285,12 @@ header h1 {
   letter-spacing: -0.02em;
   text-align: center;
 }
-
 form {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
 }
-
 form label {
   font-size: 13px;
   font-weight: 500;
@@ -3727,7 +3298,6 @@ form label {
   margin-bottom: 6px;
   letter-spacing: 0.02em;
 }
-
 form input {
   width: 100%;
   padding: 12px 16px;
@@ -3743,16 +3313,13 @@ form input {
     box-shadow var(--transition);
   outline: none;
 }
-
 form input::placeholder {
   color: var(--text-muted);
 }
-
 form input:focus {
   border-color: var(--accent-cyan);
   box-shadow: 0 0 0 3px var(--accent-cyan-dim);
 }
-
 form button {
   width: 100%;
   padding: 12px 24px;
@@ -3771,24 +3338,20 @@ form button {
   margin-top: 4px;
   letter-spacing: 0.02em;
 }
-
 form button:hover {
   background: #33dfff;
   box-shadow: var(--glow-cyan);
   transform: translateY(-1px);
 }
-
 form button:active {
   transform: translateY(0);
 }
-
 .register-main p {
   text-align: center;
   margin-top: 24px;
   font-size: 14px;
   color: var(--text-secondary);
 }
-
 .register-main p a {
   color: var(--accent-purple);
   text-decoration: none;
@@ -3797,12 +3360,10 @@ form button:active {
     color var(--transition),
     text-shadow var(--transition);
 }
-
 .register-main p a:hover {
   color: #c084fc;
   text-shadow: var(--glow-purple);
 }
-
 .error-message {
   color: #f87171;
   font-size: 12px;
@@ -3810,7 +3371,6 @@ form button:active {
   margin-bottom: 8px;
   min-height: 16px;
 }
-
 footer {
   width: 100%;
   text-align: center;
@@ -3819,7 +3379,6 @@ footer {
   border-top: 1px solid var(--border-subtle);
   margin-top: auto;
 }
-
 footer a {
   color: var(--text-muted);
   text-decoration: none;
@@ -3830,27 +3389,22 @@ footer a {
   letter-spacing: 0.06em;
   transition: color var(--transition);
 }
-
 footer a:hover {
   color: var(--accent-cyan);
 }
-
 footer p {
   margin-top: 12px;
   color: var(--text-muted);
   font-size: 11px;
 }
-
 @media (max-width: 768px) {
   .register-main {
     padding: 28px 20px;
     margin: 0 16px 32px;
   }
-
   .register-main h2 {
     font-size: 24px;
   }
-
   header {
     flex-direction: column;
     align-items: center;
@@ -3866,7 +3420,7 @@ git add src/css/styles-registro.css
 git commit -m "feat: crear estilos CSS para la página de registro"
 ```
 
-## 5.9. Fase 9: styles.css - Panel de Productos
+## 5.8. Fase 8: styles.css - Panel de Productos
 
 `index.html` enlaza los estilos del panel con `../css/styles.css`. Usa las mismas variables del tema dark cyberpunk (cyan/purple) de las otras dos hojas.
 
@@ -3876,7 +3430,6 @@ Copia esto en `src/css/styles.css`:
 
 ```css
 @import url("https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap");
-
 *,
 *::before,
 *::after {
@@ -3884,7 +3437,6 @@ Copia esto en `src/css/styles.css`:
   margin: 0;
   padding: 0;
 }
-
 :root {
   --bg-primary: #0a0e17;
   --bg-secondary: #111827;
@@ -3905,15 +3457,12 @@ Copia esto en `src/css/styles.css`:
   --radius: 6px;
   --transition: 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 html {
   color-scheme: dark;
 }
-
 @view-transition {
   navigation: auto;
 }
-
 body {
   margin: 0;
   padding: 0;
@@ -3931,12 +3480,10 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 ::selection {
   background: var(--accent-cyan-dim);
   color: var(--accent-cyan);
 }
-
 header {
   width: 100%;
   max-width: 1100px;
@@ -3946,7 +3493,6 @@ header {
   gap: 24px;
   padding: 24px 32px;
 }
-
 header h1 {
   font-size: 20px;
   font-weight: 500;
@@ -3954,14 +3500,12 @@ header h1 {
   color: var(--text-muted);
   text-transform: uppercase;
 }
-
 nav ul {
   display: flex;
   align-items: center;
   gap: 20px;
   list-style: none;
 }
-
 nav a {
   color: var(--text-muted);
   text-decoration: none;
@@ -3973,17 +3517,14 @@ nav a {
     color var(--transition),
     text-shadow var(--transition);
 }
-
 nav a:hover {
   color: var(--accent-cyan);
   text-shadow: var(--glow-cyan);
 }
-
 nav #cerrar-sesion:hover {
   color: #f87171;
   text-shadow: none;
 }
-
 main {
   width: 100%;
   max-width: 1100px;
@@ -3993,7 +3534,6 @@ main {
   padding: 0 32px 40px;
   flex: 1;
 }
-
 main h2 {
   font-size: 28px;
   font-weight: 700;
@@ -4001,13 +3541,12 @@ main h2 {
   color: var(--text-primary);
   letter-spacing: -0.02em;
 }
-
 .vistas-nav {
   display: flex;
   gap: 8px;
   border-bottom: 1px solid var(--border-subtle);
+  padding-bottom: 0;
 }
-
 .vistas-nav .tab-btn {
   padding: 10px 18px;
   background: transparent;
@@ -4024,26 +3563,21 @@ main h2 {
     border-color var(--transition),
     background var(--transition);
 }
-
 .vistas-nav .tab-btn:hover {
   color: var(--text-secondary);
 }
-
 .vistas-nav .tab-btn.activa {
   color: var(--accent-cyan);
   background: var(--bg-card);
   border-color: var(--border-subtle);
   border-bottom-color: var(--bg-card);
 }
-
 .vista {
   display: none;
 }
-
 .vista.activa {
   display: block;
 }
-
 section article,
 .tabla-contenedor {
   padding: 32px;
@@ -4052,18 +3586,15 @@ section article,
   border-radius: 12px;
   view-transition-name: main-card;
 }
-
 .lista-cabecera {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
 }
-
 .lista-cabecera h2 {
   margin-bottom: 16px;
 }
-
 #btn-nuevo-producto {
   padding: 10px 18px;
   font-size: 13px;
@@ -4078,24 +3609,20 @@ section article,
     background var(--transition),
     box-shadow var(--transition);
 }
-
 #btn-nuevo-producto:hover {
   background: var(--accent-cyan-dim);
   box-shadow: var(--glow-cyan);
 }
-
 .tabla-contenedor {
   padding: 0;
   overflow-x: auto;
 }
-
 table {
   width: 100%;
   border-collapse: collapse;
   font-size: 14px;
   min-width: 720px;
 }
-
 thead th {
   text-align: left;
   padding: 14px 16px;
@@ -4106,26 +3633,21 @@ thead th {
   letter-spacing: 0.06em;
   border-bottom: 1px solid var(--border-subtle);
 }
-
 tbody td {
   padding: 14px 16px;
   color: var(--text-secondary);
   border-bottom: 1px solid var(--border-subtle);
   vertical-align: middle;
 }
-
 tbody tr:last-child td {
   border-bottom: none;
 }
-
 tbody tr {
   transition: background var(--transition);
 }
-
 tbody tr:hover {
   background: rgba(30, 41, 59, 0.5);
 }
-
 tbody img {
   width: 56px;
   height: 56px;
@@ -4134,11 +3656,9 @@ tbody img {
   border: 1px solid var(--border-subtle);
   display: block;
 }
-
 td.acciones {
   white-space: nowrap;
 }
-
 .acciones button {
   padding: 6px 12px;
   margin-right: 8px;
@@ -4153,42 +3673,35 @@ td.acciones {
     color var(--transition),
     box-shadow var(--transition);
 }
-
 .acciones .btn-editar {
   color: var(--accent-cyan);
   border: 1px solid var(--accent-cyan);
 }
-
 .acciones .btn-editar:hover {
   background: var(--accent-cyan-dim);
   box-shadow: var(--glow-cyan);
 }
-
 .acciones .btn-eliminar {
   color: #f87171;
   border: 1px solid #f87171;
   margin-right: 0;
 }
-
 .acciones .btn-eliminar:hover {
   background: rgba(248, 113, 113, 0.12);
   box-shadow: 0 0 20px rgba(248, 113, 113, 0.3);
 }
-
 .sin-productos {
   text-align: center;
   padding: 40px 16px;
   color: var(--text-muted);
   font-size: 14px;
 }
-
 form {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
 }
-
 form label {
   font-size: 13px;
   font-weight: 500;
@@ -4196,7 +3709,6 @@ form label {
   margin-bottom: 6px;
   letter-spacing: 0.02em;
 }
-
 form input,
 form textarea,
 form select {
@@ -4214,12 +3726,10 @@ form select {
     box-shadow var(--transition);
   outline: none;
 }
-
 form textarea {
   resize: vertical;
   line-height: 1.5;
 }
-
 form select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%2394a3b8' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
@@ -4227,24 +3737,47 @@ form select {
   background-position: right 16px center;
   padding-right: 40px;
 }
-
+.imagen-opciones {
+  width: 100%;
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius);
+  padding: 12px 16px;
+  margin-bottom: 20px;
+}
+.imagen-opciones legend {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 0 6px;
+}
+.imagen-opciones label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 20px 0 0;
+  cursor: pointer;
+}
+.imagen-opciones input[type="radio"] {
+  width: auto;
+  margin-bottom: 0;
+  accent-color: var(--accent-cyan);
+}
 form input:disabled {
   color: var(--text-muted);
   cursor: not-allowed;
 }
-
 form input::placeholder,
 form textarea::placeholder {
   color: var(--text-muted);
 }
-
 form input:focus,
 form textarea:focus,
 form select:focus {
   border-color: var(--accent-cyan);
   box-shadow: 0 0 0 3px var(--accent-cyan-dim);
 }
-
 form button {
   width: 100%;
   padding: 12px 24px;
@@ -4263,17 +3796,14 @@ form button {
   margin-top: 4px;
   letter-spacing: 0.02em;
 }
-
 form button:hover {
   background: #33dfff;
   box-shadow: var(--glow-cyan);
   transform: translateY(-1px);
 }
-
 form button:active {
   transform: translateY(0);
 }
-
 .error-message {
   color: #f87171;
   font-size: 12px;
@@ -4281,7 +3811,6 @@ form button:active {
   margin-bottom: 8px;
   min-height: 16px;
 }
-
 footer {
   width: 100%;
   text-align: center;
@@ -4289,38 +3818,31 @@ footer {
   padding: 24px 32px;
   border-top: 1px solid var(--border-subtle);
 }
-
 footer p {
   color: var(--text-muted);
   font-size: 11px;
 }
-
 @media (max-width: 768px) {
   main {
     padding: 0 20px 32px;
   }
-
   header {
     flex-direction: column;
     align-items: center;
     text-align: center;
     padding: 20px;
   }
-
   section article,
   .tabla-contenedor {
     padding: 24px 20px;
   }
-
   .tabla-contenedor {
     padding: 0;
   }
-
   .lista-cabecera {
     flex-direction: column;
     align-items: flex-start;
   }
-
   main h2 {
     font-size: 24px;
   }
@@ -4333,7 +3855,7 @@ git add src/css/styles.css
 git commit -m "feat: agregar estilos CSS para el panel de productos"
 ```
 
-## 5.10. Fase 10: transitions.js
+## 5.9. Fase 9: transitions.js
 
 ### JavaScript - Código completo
 
@@ -4348,26 +3870,21 @@ const h1 = document.querySelector("header h1");
 const trigger =
   document.querySelector(".boton-cuenta-nueva a.button") ||
   document.querySelector(".register-main p a");
-
 const rectToJson = (r) => ({
   left: r.left,
   top: r.top,
   width: r.width,
   height: r.height,
 });
-
 const animateMorph = (el, rect) => {
   if (!el || !rect) return;
   el.style.opacity = "0";
-
   requestAnimationFrame(() => {
     const natural = el.getBoundingClientRect();
     const dx = rect.left - natural.left;
     const dy = rect.top - natural.top;
-
     el.style.transform = `translate(${dx}px, ${dy}px)`;
     el.style.transition = "none";
-
     requestAnimationFrame(() => {
       el.style.transition =
         "transform 400ms cubic-bezier(0.4, 0, 0.2, 1), opacity 200ms ease";
@@ -4376,25 +3893,21 @@ const animateMorph = (el, rect) => {
     });
   });
 };
-
 window.addEventListener("pageswap", (e) => {
   if (e.viewTransition && window.__skipNativeVT) {
     e.viewTransition.skipTransition();
   }
 });
-
 let stored = null;
 try {
   stored = sessionStorage.getItem("morph");
   sessionStorage.removeItem("morph");
 } catch {}
-
 if (stored) {
   const pos = JSON.parse(stored);
   animateMorph(card, pos.card);
   animateMorph(h1, pos.h1);
 }
-
 if (trigger) {
   trigger.addEventListener("click", (e) => {
     e.preventDefault();
@@ -4407,12 +3920,10 @@ if (trigger) {
         }),
       );
     } catch {}
-
     window.__skipNativeVT = true;
     window.location.href = trigger.href;
   });
 }
-
 window.addEventListener("pageshow", (e) => {
   if (e.persisted) {
     [card, h1].forEach((el) => {
@@ -4440,7 +3951,7 @@ git add src/js/transitions.js src/css/styles-login.css src/css/styles-registro.c
 git commit -m "feat: implement login and registration page transitions with animations"
 ```
 
-## 5.11. Fase 11: Pulido y pruebas
+## 5.10. Fase 10: Pulido y pruebas
 
 **Paso 1:** Probar cada página en el navegador
 
@@ -4450,7 +3961,7 @@ Abre cada archivo HTML en tu navegador (doble clic o "Open with Live Server" en 
 - `src/pages/index.html`
 
 **Paso 2:** Verificar
-- [ ] Página principal (login.html) muestra formulario de login y portada
+- [ ] Página principal (login.html) muestra formulario de login y video de muestra
 - [ ] Login redirige a index.html con credenciales válidas
 - [ ] Login muestra error con credenciales incorrectas
 - [ ] Registro crea cuenta y redirige a login.html
@@ -4463,6 +3974,9 @@ Abre cada archivo HTML en tu navegador (doble clic o "Open with Live Server" en 
 - [ ] El botón "Agregar Producto" limpia el form y muestra la vista de registro
 - [ ] Productos se editan (clic en "Editar" lleva al formulario con los datos)
 - [ ] Productos se eliminan (con confirmación)
+- [ ] La primera visita muestra 5 productos demo
+- [ ] Los productos persisten al recargar la página (localStorage)
+- [ ] Se puede agregar imagen por URL o subiendo un archivo local
 - [ ] CSS se aplica correctamente (colores, márgenes, bordes)
 - [ ] Responsive funciona en celular (abre DevTools y simula un celular)
 
@@ -4478,10 +3992,7 @@ git push origin main
 
 **Solución:**
 ```javascript
-// MAL: El elemento aún no existe cuando se ejecuta el JS
 document.getElementById("miBoton").addEventListener("click", ...);
-
-// BIEN: Espera a que el DOM esté cargado
 document.addEventListener("DOMContentLoaded", function() {
   document.getElementById("miBoton").addEventListener("click", ...);
 });
@@ -4496,9 +4007,8 @@ document.addEventListener("DOMContentLoaded", function() {
 
 **Solución:**
 ```javascript
-// Verificar que el elemento existe
 const boton = document.getElementById("miBoton");
-console.log(boton);  // Si dice null, el ID está mal o el elemento no existe
+console.log(boton);
 ```
 
 ## 6.3. "El formulario se recarga solo"
@@ -4508,8 +4018,7 @@ console.log(boton);  // Si dice null, el ID está mal o el elemento no existe
 **Solución:**
 ```javascript
 formulario.addEventListener("submit", function(event) {
-  event.preventDefault();  // ¡ESTO ES OBLIGATORIO!
-  // Resto del código de validación
+  event.preventDefault();
 });
 ```
 
@@ -4522,25 +4031,22 @@ formulario.addEventListener("submit", function(event) {
 
 **Solución:**
 ```html
-<!-- Verificar la ruta. Si login.html está en src/pages/ y CSS en src/css/ -->
 <link rel="stylesheet" href="../css/styles-login.css">
-<!--          ../ = sube un nivel de carpeta          -->
 ```
 
 ## 6.5. "El video no se muestra"
 
 **Causas posibles:**
-1. El `src` del iframe tiene la URL mal
-2. YouTube bloquea el video (privado o eliminado)
-3. El `allowfullscreen` no está
+1. El `src` del `<video>` tiene la ruta mal
+2. El archivo `muestra-productos.mp4` no existe o no está en la ruta correcta
+3. Falta `muted` (y/o `playsinline`), por lo que el navegador bloquea el `autoplay`
 
 **Solución:**
 ```html
-<!-- Asegúrate de usar /embed/ en lugar de /watch?v= -->
-<!-- MAL:  https://www.youtube.com/watch?v=ABC123 -->
-<!-- BIEN: https://www.youtube.com/embed/ABC123 -->
-<iframe src="https://www.youtube.com/embed/ABC123" allowfullscreen></iframe>
+<video src="../assets/video/muestra-productos.mp4" autoplay muted loop playsinline></video>
 ```
+
+La ruta se calcula desde `src/pages/login.html`; `../` sube un nivel a `src/` y de ahí a `assets/video/`. El video debe ir con `muted` para que el `autoplay` esté permitido por el navegador.
 
 ---
 
